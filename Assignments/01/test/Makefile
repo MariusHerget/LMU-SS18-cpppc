@@ -9,10 +9,9 @@ OBJS = testsuite.o \
 			 vector_test.o \
 			 ../solution/vector.o \
 			  deque_test.o \
- 			 ../solution/deque.o
-			 #stack_test.o \
-			 # \ \
-			 ../solution/stack.o
+ 			 ../solution/deque.o \
+			 stack_test.o \
+			  ../solution/stack.o
 .DEFAULT: all
 all: $(OBJS) testsuite.bin
 
