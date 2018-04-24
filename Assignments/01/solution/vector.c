@@ -2,14 +2,14 @@
 
 Vector *  vector__new(){
         Vector * v = new Vector();
-        v->data = 0;
+        // Init data with one element to avoid SegmentationFault
+        v->data = static_cast<Type*>(malloc(sizeof(Type)+1));
         v->_size = 0;
         v->_capacity = 0;
         return v;
 }
 Vector * vector__copy(Vector * v){
         Vector * r = vector__new();
-
         r->data = static_cast<Type*>(malloc(v->_size*sizeof(Type)));
         r->_size = v->_size;
         r->_capacity = v->_capacity;
@@ -21,6 +21,8 @@ Vector * vector__copy(Vector * v){
         return r;
 }
 void vector__delete(Vector * v){
+        // printf("\n #################TEST\t%d",v->_size);
+        // SegmentationFault when trying to free pointer --> TODO: DEBUG
         // for(int i=0; i< v->_size; i++) {
         //         free(v->data[i]);
         // }
@@ -29,21 +31,21 @@ void vector__delete(Vector * v){
 }
 Vector * vector__assign(Vector * v, Vector * r) {
         v->_size = r->_size;
-        v->_capacity = v->_capacity;
+        v->_capacity = r->_capacity;
         v->data = r->data;
         return v;
 }
 int vector__equals(Vector * v, Vector * r){
         if (
                 v->_size == r->_size &&
-                v->_capacity == v->_capacity &&
+                v->_capacity == r->_capacity &&
                 v->data == r->data
                 ) {
                 return 1;
         }
         else if (
                 v->_size == r->_size &&
-                v->_capacity == v->_capacity
+                v->_capacity == r->_capacity
                 ) {
                 int f=0;
                 for (int i; i<r->_size; i++) {

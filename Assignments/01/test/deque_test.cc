@@ -21,6 +21,7 @@ TEST_F(DequeTest, StandardConcept)
   deque__push_back(d1, 12);
   deque__push_back(d1, 34);
 
+      LOG_MESSAGE("DequeTest.StandardConcept: debug");
   ASSERT_EQ(0, deque__equals(d1,d2));
 
   LOG_MESSAGE("DequeTest.StandardConcept: deque__assign");

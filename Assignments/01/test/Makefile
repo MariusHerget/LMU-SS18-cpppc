@@ -7,11 +7,11 @@ INCLUDES=-I${GTEST_BASE}/include -I../
 
 OBJS = testsuite.o \
 			 vector_test.o \
-			 ../solution/vector.o
-			 # deque_test.o \
-			 stack_test.o \
-			 # \
-			 ../solution/deque.o \
+			 ../solution/vector.o \
+			  deque_test.o \
+ 			 ../solution/deque.o
+			 #stack_test.o \
+			 # \ \
 			 ../solution/stack.o
 .DEFAULT: all
 all: $(OBJS) testsuite.bin
@@ -23,7 +23,7 @@ run: clean testsuite.bin
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 %.o: %.cc
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ 
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 %.bin: $(OBJS)
 	$(CC) $(OBJS) -o $@ $(LDFLAGS)

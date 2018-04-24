@@ -1,10 +1,18 @@
 #ifndef DEQUE_H
 #define DEQUE_H
+#include <cstddef>
+#include <cstdio>
+#include <cstring>
+#include <string>
+#include <stdlib.h>
+#include <stdio.h>
 typedef int Type;
 typedef typename std::size_t size_type;
 
 typedef struct {
-
+        size_type _size;
+        size_type _capacity;
+        Type * data;
 } Deque;
 
 Deque * deque__new();
@@ -19,4 +27,4 @@ Type deque__pop_back(Deque * d);
 Type deque__push_front(Deque * d, Type e);
 Type deque__pop_front(Deque * d);
 
-#endif //VECTOR_H
+#endif //DEQUE_H
