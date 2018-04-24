@@ -9,8 +9,8 @@ using ::testing::TestEventListeners;
 int main(int argc, char * argv[])
 {
   // Init GoogleTest (strips gtest arguments from argv)
+  ::testing::internal::ColoredPrintf("test");
   ::testing::InitGoogleTest(&argc, argv);
-
   // Run Tests
   int ret = RUN_ALL_TESTS();
 

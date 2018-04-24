@@ -9,11 +9,11 @@ class VectorTest : public ::testing::Test {
 public:
 
   VectorTest() {
-    LOG_MESSAGE("Opening test suite: VectorTest");
+    // LOG_MESSAGE("Opening test suite: VectorTest");
   }
 
   virtual ~VectorTest() {
-    LOG_MESSAGE("Closing test suite: VectorTest");
+    // LOG_MESSAGE("Closing test suite: VectorTest");
   }
 
   virtual void SetUp() {
