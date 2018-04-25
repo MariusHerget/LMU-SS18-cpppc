@@ -33,4 +33,6 @@ void vector__push_front(Vector * v, Type e);
 Type vector__pop_front(Vector * v);
 Type vector__at(Vector * v, int o);
 
+Vector * vector__reverse(Vector * v);
+
 #endif //VECTOR_H

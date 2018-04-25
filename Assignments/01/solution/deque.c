@@ -112,3 +112,12 @@ Type deque__pop_front(Deque * d){
         printf("\t\t\t\t\t\tERROR DEQUE TOO SMALL");
         return 0;
 }
+
+
+Deque * deque__reverse(Deque * d){
+        Deque * dnew = deque__new();
+        for (int i=d->_size-1; i>=0; i--) {
+                deque__push_back(dnew, d->data[i]);
+        }
+        return dnew;
+}

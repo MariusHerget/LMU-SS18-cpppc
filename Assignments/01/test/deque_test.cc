@@ -154,3 +154,30 @@ TEST_F(DequeTest, DequeLIFO)
   LOG_MESSAGE("DequeTest.DequeLIFO: deque__delete");
   deque__delete(d);
 }
+
+TEST_F(DequeTest, DequeReverse)
+{
+        LOG_MESSAGE("DequeTest.DequeReverse: deque__new");
+        Deque * v1 = deque__new();
+        Deque * v2 = deque__new();
+
+        LOG_MESSAGE("DequeTest.DequeReverse: deque__push_front(...)");
+        deque__push_back(v1, 444);
+        deque__push_back(v1, 333);
+        deque__push_back(v1, 222);
+        deque__push_back(v1, 111);
+        ASSERT_EQ(4,   deque__size(v1));
+
+        deque__push_back(v2, 111);
+        deque__push_back(v2, 222);
+        deque__push_back(v2, 333);
+        deque__push_back(v2, 444);
+        ASSERT_EQ(4,   deque__size(v2));
+
+        v1 = deque__reverse(v1);
+        ASSERT_EQ(1,   deque__equals(v1,v2));
+
+        LOG_MESSAGE("DequeTest.DequeReverse: deque__delete");
+        deque__delete(v1);
+        deque__delete(v2);
+}

@@ -80,3 +80,10 @@ Type stack__pop(Stack * s){
         }
         return 0;
 }
+Stack * stack__reverse(Stack * s){
+        Stack * snew = stack__new();
+        for (int i=s->_size-1; i>=0; i--) {
+                stack__push(snew, s->data[i]);
+        }
+        return snew;
+}

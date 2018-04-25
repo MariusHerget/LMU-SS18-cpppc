@@ -27,4 +27,6 @@ Type deque__pop_back(Deque * d);
 Type deque__push_front(Deque * d, Type e);
 Type deque__pop_front(Deque * d);
 
+Deque * deque__reverse(Deque * d);
+
 #endif //DEQUE_H

@@ -186,3 +186,29 @@ TEST_F(VectorTest, VectorLIFO)
         LOG_MESSAGE("VectorTest.VectorLIFO: vector__delete");
         vector__delete(v);
 }
+TEST_F(VectorTest, VectorReverse)
+{
+        LOG_MESSAGE("VectorTest.VectorReverse: vector__new");
+        Vector * v1 = vector__new();
+        Vector * v2 = vector__new();
+
+        LOG_MESSAGE("VectorTest.VectorReverse: vector__push_front(...)");
+        vector__push_front(v1, 444);
+        vector__push_front(v1, 333);
+        vector__push_front(v1, 222);
+        vector__push_front(v1, 111);
+        ASSERT_EQ(4,   vector__size(v1));
+
+        vector__push_front(v2, 111);
+        vector__push_front(v2, 222);
+        vector__push_front(v2, 333);
+        vector__push_front(v2, 444);
+        ASSERT_EQ(4,   vector__size(v2));
+
+        v1 = vector__reverse(v1);
+        ASSERT_EQ(1,   vector__equals(v1,v2));
+
+        LOG_MESSAGE("VectorTest.VectorReverse: vector__delete");
+        vector__delete(v1);
+        vector__delete(v2);
+}

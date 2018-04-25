@@ -79,6 +79,11 @@ void vector__push_back(Vector * v, Type e){
         }
         vnew->data[v->_size] = e;
         *v = *vnew;
+        // printf("\t\t\t\t\t\t\tDEBUG vector__push_back: ");
+        // for (int i=0; i<v->_size; i++)  {
+        //         printf("%d - ",v->data[i]);
+        // }
+        // printf("\n");
 }
 void vector__push_front(Vector * v, Type e){
         Vector * vnew = vector__new();
@@ -135,4 +140,12 @@ Type vector__at(Vector * v, int o){
         }
         // printf("\t\t\t\t\t\t\tDEBUG: %d\n",v->data[o]);
         return v->data[o];
+}
+
+Vector * vector__reverse(Vector * v) {
+        Vector * vnew = vector__new();
+        for (int i=v->_size-1; i>=0; i--) {
+                vector__push_back(vnew, v->data[i]);
+        }
+        return vnew;
 }

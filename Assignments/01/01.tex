@@ -108,6 +108,22 @@
 \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
 \fi
 
+% HERGET
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems, breakable, skins}
+\newtcbtheorem{example}% environment name
+              {Answer}% Title text
+  {enhanced, % tcolorbox styles
+  attach boxed title to top center={yshift=-2.5mm},
+  colback=white, colframe=black, colbacktitle=white, coltitle=black,
+  boxed title style={size=small,colframe=white},
+  fonttitle=\bfseries,
+  sharp corners=all,
+  breakable
+  }%
+  {ex}% label prefix
+ % END HERGET
+
 \begin{document}
 \maketitle
 
@@ -244,11 +260,23 @@ Some thoughts on this:
 \tightlist
 \item
   We use regular pointers as iterators. What if we implemented a list?
+    \begin{example}{Iterators}{iter}
+        A list which stores the adress of every element in the vector, would
+        enable us to call every element very fast. Thus, it is quite complex to
+        implement and update.
+    \end{example}
+
 \item
   Look up the interface of \texttt{std::vector} at
   http://cppreference.com. The vector concept in the STL does not
   specify some of the methods above. Which ones? Why? If the answer does
   not seem obvious to you, implement all methods first. You'll see.
+    \begin{example}{Interface}{inter}
+        The \texttt{std::vector} does not implement \texttt{push\_\_front} and
+        \texttt{pop\_\_front}. It is very inefficient since it constantly
+        shuffling the existing data up every time we do an insertion. A
+        \texttt{deque} is designed to perform these operations.
+    \end{example}
 \end{itemize}
 
 \subsection{1-2: Deque Class in C}\label{deque-class-in-c}
@@ -312,9 +340,23 @@ Over}\label{some-thoughts-to-meditate-over}
 
 Is there a \texttt{stack} container in the STL? How about a
 \texttt{deque} container? Go to \texttt{cppreference.com} and find out.
+  \begin{example}{Stack \& Deque in CPP}{dest}
+    Yes there is a \texttt{Stack} "is a container adapter that gives the
+    programmer the functionality of a stack - specifically, a FILO (first-in,
+    last-out) data structure."\\
+    "std::deque (double-ended queue) is an indexed sequence container that
+    allows fast insertion and deletion at both its beginning and its end. In
+    addition, insertion and deletion at either end of a deque never invalidates
+    pointers or references to the rest of the elements. "
+  \end{example}
 
 Now, see if you can find something special about their definitions. Can
 you think of a reason for their differences?
+  \begin{example}{Iterators}{iter}
+        \texttt{Stack} is designed to perform FILO and \texttt{Deque} to insert
+        in the front or back while keeping the memoryadress of the rest of the
+        elements.
+  \end{example}
 
 \subsection{1-5: Reverse Algorithm}\label{reverse-algorithm}
 
@@ -339,6 +381,9 @@ the element order of the respective container instance. For this:
 
 What do you notice about the similarities and differences in your
 implementations of these functions?
+  \begin{example}{Reverse}{rev}
+
+  \end{example}
 
 Now, have another look at the question in 1-4. If you did not find an
 answer already, can you now think of a reason for the curious definition
@@ -352,6 +397,9 @@ Assuming you had to implement the test cases yourself.
 What feature are you missing in C that would drastically simplify the
 implementation of the test cases for \texttt{Vector}, \texttt{Deque} and
 \texttt{Stack}?
+  \begin{example}{Iterators}{iter}
+    
+  \end{example}
 
 Hint: You might have noticed that the test suites are quite identical.
 Why? Is there an advantage in this? Can you exploit this in C?

@@ -27,4 +27,6 @@ int stack__empty(Stack * s);
 void stack__push(Stack * s, Type e);
 Type stack__pop(Stack * s);
 
+Stack * stack__reverse(Stack * s);
+
 #endif //stack_H

@@ -93,3 +93,29 @@ TEST_F(StackTest, StackLIFO)
   stack__delete(s);
 }
 
+TEST_F(StackTest, StackReverse)
+{
+        LOG_MESSAGE("StackTest.StackReverse: stack__new");
+        Stack * v1 = stack__new();
+        Stack * v2 = stack__new();
+
+        LOG_MESSAGE("StackTest.StackReverse: stack__push_front(...)");
+        stack__push(v1, 444);
+        stack__push(v1, 333);
+        stack__push(v1, 222);
+        stack__push(v1, 111);
+        ASSERT_EQ(4,   stack__size(v1));
+
+        stack__push(v2, 111);
+        stack__push(v2, 222);
+        stack__push(v2, 333);
+        stack__push(v2, 444);
+        ASSERT_EQ(4,   stack__size(v2));
+
+        v1 = stack__reverse(v1);
+        ASSERT_EQ(1,   stack__equals(v1,v2));
+
+        LOG_MESSAGE("StackTest.StackReverse: stack__delete");
+        stack__delete(v1);
+        stack__delete(v2);
+}
