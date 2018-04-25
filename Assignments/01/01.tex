@@ -382,7 +382,7 @@ the element order of the respective container instance. For this:
 What do you notice about the similarities and differences in your
 implementations of these functions?
   \begin{example}{Reverse}{rev}
-
+    Since I use a quit easy but expensive way to implement the \texttt{reverse} functions those are completly similiar. I create a new object and insert the last element of the original object to the start of the new one.
   \end{example}
 
 Now, have another look at the question in 1-4. If you did not find an
@@ -397,8 +397,9 @@ Assuming you had to implement the test cases yourself.
 What feature are you missing in C that would drastically simplify the
 implementation of the test cases for \texttt{Vector}, \texttt{Deque} and
 \texttt{Stack}?
-  \begin{example}{Iterators}{iter}
-    
+  \begin{example}{Outlook}{outlook}
+    A templated function which uses a Type and/or a word which is inserted into a templated test-case.
+    In C I implemented the concepts very similiar since the test-cases do not check whether the memory allocation (etc) is completly according to the concept.
   \end{example}
 
 Hint: You might have noticed that the test suites are quite identical.
