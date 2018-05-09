@@ -24,17 +24,17 @@ TEST_F(ListTest, StandardConcept)
 
 
         LOG_MESSAGE("ListTest.StandardConcept: push_back");
-        ASSERT_EQ(0, v1 == v2);
+        ASSERT_EQ(false, v1 == v2);
 
         LOG_MESSAGE("ListTest.StandardConcept: List__assign");
         v2 = v1;
 
-        ASSERT_EQ(1, v1 == v2);
+        ASSERT_EQ(true, v1 == v2);
 
         LOG_MESSAGE("ListTest.StandardConcept: List__copy");
         list<int> v3 =  list<int>(v1);
 
-        ASSERT_EQ(1, v1 == v3);
+        ASSERT_EQ(true, v1 == v3);
 }
 TEST_F(ListTest, ListConcept)
 {
@@ -73,8 +73,8 @@ TEST_F(ListTest, ListConcept)
         list<int> vcopy = list<int>(v);
 
         LOG_MESSAGE("ListTest.ListConcept: List__begin, List__end");
-        cpppc::list<int>::ListIterator viter = v.begin();
-        cpppc::list<int>::ListIterator vend  = v.end();
+        cpppc::list<int>::iterator viter = v.begin();
+        cpppc::list<int>::iterator vend  = v.end();
 
         for (; viter != vend; ++viter) {
                 *viter += 100;
@@ -112,27 +112,5 @@ TEST_F(ListTest, ListFIFO)
         ASSERT_EQ(222, v.pop_back());
         ASSERT_EQ(111, v.pop_back());
         ASSERT_EQ(0,   v.size());
-}
-TEST_F(ListTest, ListReverse)
-{
-        LOG_MESSAGE("ListTest.ListReverse: List__new");
-        list<int> v1 = list<int>();
-        list<int> v2 = list<int>();
-
-        LOG_MESSAGE("ListTest.ListReverse: List__push_front(...)");
-        v1.push_back(444);
-        v1.push_back(333);
-        v1.push_back(222);
-        v1.push_back(111);
-        ASSERT_EQ(4,   v1.size());
-
-        v2.push_back(111);
-        v2.push_back(222);
-        v2.push_back(333);
-        v2.push_back(444);
-        ASSERT_EQ(4,   v2.size());
-
-        v1.reverse();
-        ASSERT_EQ(1,  v1 == v2);
 }
 }
