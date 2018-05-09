@@ -3,15 +3,17 @@ template <
         typename ValueT,
         ValueT default_value>
 bool list<ValueT, default_value>::operator==(self_t & rhs){
+        // printf("\n !! DEBUG list==\n");
         return (this == &rhs || // identity
                 (this->_begin == rhs._begin)
                 );
 }
 // Why does this not work
-    // -> invalid operands to binary expression ('const cpppc::list<int, 0>::ListIterator' and 'const cpppc::list<int, 0>::ListIterator')
+// -> invalid operands to binary expression ('const cpppc::list<int, 0>::ListIterator' and 'const cpppc::list<int, 0>::ListIterator')
 //
 template <typename ValueT, ValueT default_value>
 bool list<ValueT, default_value>::operator==(const self_t & rhs) const {
+        // printf("\n !! DEBUG const list==\n");
         return (this == &rhs || // identity
                 (this->_begin == rhs._begin)
                 );
@@ -23,8 +25,18 @@ bool list<ValueT, default_value>::operator==(const self_t & rhs) const {
 template <
         typename ValueT,
         ValueT default_value>
-void list<ValueT, default_value>::push_back(ValueT val){
-
+void list<ValueT, default_value>::push_back(const ValueT& val){
+        // create new list_node
+        list_node nn = { nullptr, val };
+        if(_head.next == nullptr && _head.value == default_value) {
+                _head = _tail = nn;
+                _begin = ListIterator(&_head, this);
+                // _end = ListIterator(&_tail, this);
+        } else {
+                _tail.next = &nn;
+                _tail = nn;
+                // _end = ListIterator(&_tail, this);
+        }
 }
 
 template <

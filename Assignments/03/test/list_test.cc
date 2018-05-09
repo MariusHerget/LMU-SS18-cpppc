@@ -40,8 +40,10 @@ TEST_F(ListTest, ListConcept)
 {
         LOG_MESSAGE("ListTest.ListConcept: List__new");
         list<int> v = list<int>();
+                printf("\n!!! DEBUG before Size()");
 
         ASSERT_EQ(0,  v.size());
+                printf("\n!!! DEBUG after Size()");
         ASSERT_EQ(1,  v.empty());
 
         LOG_MESSAGE("ListTest.ListConcept: List__push_back(56)");

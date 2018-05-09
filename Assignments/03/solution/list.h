@@ -37,9 +37,10 @@ namespace cpppc {
     public:
        ListIterator() = delete;
 
-       // ListIterator(const list_t & list)
-       // // : _list(list)
-       // { }
+       ListIterator(list_t * lis)
+       : _list(lis)
+       , _list_node(0)
+       { }
 
        ListIterator(list_node_t * node, list_t * list)
        : _list_node(node)
@@ -78,21 +79,34 @@ namespace cpppc {
        }
 
        bool operator==(self_t & rhs) {
-         return  (this == &rhs || // identity
-                   // ( //_list == rhs._list &&
-                   //   _sameNodes(rhs) ) ||
-                   ( ++static_cast<self_t>(*this) == ++rhs  )
-                 );
+         printf("\n !! DEBUG iterator==\n");
+         if (static_cast<self_t>(*this)._list_node != 0 && rhs._list_node != 0)
+           if (static_cast<self_t>(*this)._list_node->next != nullptr
+                && rhs._list_node->next != nullptr)
+               return  (this == &rhs || // identity
+                        ( _list == rhs._list
+                       && ++static_cast<self_t>(*this) == ++rhs
+                       && static_cast<self_t>(*this)._list_node->value == rhs._list_node->value   )
+                       );
+            else return this->_list_node->value == rhs._list_node->value;
+          else  return  true;
        }
        bool operator!=(self_t & rhs) {
-         return  !(this == &rhs || // identity
-                   // ( //_list == rhs._list &&
-                   //   _sameNodes(rhs) ) ||
-                   ( ++static_cast<self_t>(*this) == ++rhs  )
-                 );
+         printf("\n !! DEBUG iterator!=\n");
+         if (static_cast<self_t>(*this)._list_node != 0 && rhs._list_node != 0)
+           if (static_cast<self_t>(*this)._list_node->next != nullptr
+                && rhs._list_node->next != nullptr)
+               return  !(this == &rhs || // identity
+                        ( _list == rhs._list
+                       && ++static_cast<self_t>(*this) == ++rhs
+                       && static_cast<self_t>(*this)._list_node->value == rhs._list_node->value   )
+                       );
+            else return !(this->_list_node->value == rhs._list_node->value);
+          else  return false;
        }
 
        bool operator==(const self_t & rhs) const {
+         // printf("\n !! DEBUG const iterator==\n");
          self_t itt= static_cast<self_t>(*this);
          self_t itrhs= static_cast<self_t>(rhs);
          return  (this == &rhs || // identity
@@ -133,8 +147,8 @@ namespace cpppc {
     const_reference;
   public:
     list()
-    : _begin(ListIterator(& _head, this))
-    , _end(ListIterator(& _tail, this))
+    : _begin(ListIterator(this))
+    , _end(ListIterator(this))
     { }
 
     list(const self_t & other)             = default;
@@ -144,13 +158,16 @@ namespace cpppc {
     iterator         end()                { _end; }
     const_reference  begin() const        { _begin; }
     const_reference  end()   const        { _end; }
-    size_type        size()  const        { return end() - begin(); }
+    size_type        size()  const        {
+            printf("\n!!! DEBUG Size() %d / %d\n", _end, _begin);
+            return end() - begin();
+    }
     bool             empty() const        { return (size()==0); }
     bool operator==(self_t & rhs);
     bool operator==(const self_t & rhs) const;
     value_type & operator[](int index) ;
     // Herget Implementation
-    void push_back(ValueT val);
+    void push_back(const ValueT& val);
     value_type pop_back();
 
   private:
@@ -160,7 +177,7 @@ namespace cpppc {
 
     // self_t * this
 
-    iterator  _begin = *this;
+    iterator  _begin = ListIterator(& _head, this);
     iterator  _end;
   }; // CLASS list
 
