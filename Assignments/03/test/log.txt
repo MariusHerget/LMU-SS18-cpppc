@@ -1,0 +1,9 @@
+rm -f *.o
+rm -f *.a
+rm -f *.bin
+rm -f ../solution/*.o
+rm -f ../solution/*.a
+clang++ --std=c++11 -Wall -Wextra -pedantic -g -I/home/herget/opt/gtest/include -I../ -c testsuite.cc -o testsuite.o
+clang++ --std=c++11 -Wall -Wextra -pedantic -g -I/home/herget/opt/gtest/include -I../ -c measurements_test.cc -o measurements_test.o
+clang++ --std=c++11 -Wall -Wextra -pedantic -g -I/home/herget/opt/gtest/include -I../ -c list_test.cc -o list_test.o
+Makefile:23: recipe for target 'list_test.o' failed

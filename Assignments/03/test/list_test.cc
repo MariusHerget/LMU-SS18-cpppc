@@ -44,10 +44,6 @@ TEST_F(ListTest, ListConcept)
         ASSERT_EQ(0,  v.size());
         ASSERT_EQ(1,  v.empty());
 
-        LOG_MESSAGE("ListTest.ListConcept: List__begin, List__end");
-        ASSERT_EQ(v.begin(), v.end());
-        ASSERT_EQ(v.end(), v.begin() + v.size());
-
         LOG_MESSAGE("ListTest.ListConcept: List__push_back(56)");
         v.push_back(56);
         LOG_MESSAGE("ListTest.ListConcept: List__push_back(78)");
@@ -55,7 +51,9 @@ TEST_F(ListTest, ListConcept)
         LOG_MESSAGE("ListTest.ListConcept: List__push_back(90)");
         v.push_back(90);
 
-        ASSERT_EQ(v.end(), v.begin() + v.size());
+        cpppc::list<int>::iterator viter = v.begin();
+        cpppc::list<int>::iterator vend  = v.end();
+        ASSERT_EQ(vend, viter + v.size());
 
         LOG_MESSAGE("ListTest.ListConcept: List__at");
         ASSERT_EQ(3,  v.size());
@@ -73,8 +71,8 @@ TEST_F(ListTest, ListConcept)
         list<int> vcopy = list<int>(v);
 
         LOG_MESSAGE("ListTest.ListConcept: List__begin, List__end");
-        cpppc::list<int>::iterator viter = v.begin();
-        cpppc::list<int>::iterator vend  = v.end();
+        viter = v.begin();
+        vend  = v.end();
 
         for (; viter != vend; ++viter) {
                 *viter += 100;
