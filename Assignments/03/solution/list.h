@@ -34,9 +34,18 @@ class ListIterator {
         public:
         ListIterator() = delete;
 
-        ListIterator(const list_node_t & node)
-                : _list_node(node)
+        ListIterator(list_node_t & node)
+                : _list_node(&node)
         {
+        }
+
+        self_t & operator+(int index) {
+                self_t it = static_cast<self_t>(*this);
+                for (int i=0; i <= index; it++) {
+                   if (index == i) break;
+                   i++;
+                }
+                return it;
         }
 
         ListIterator & operator++() {
@@ -65,8 +74,14 @@ class ListIterator {
                 return _list_node->value;
         }
 
-        bool operator==(const self_t & rhs) {
+        bool operator==(const self_t & rhs) const {
                 return  (this == &rhs ||  // identity
+                         ( _list_node == rhs._list_node &&
+                           _list_node->value == rhs._list_node->value));
+        }
+
+        bool operator!=(self_t & rhs) {
+                return !(this == &rhs ||  // identity
                          ( _list_node == rhs._list_node &&
                            _list_node->value == rhs._list_node->value));
         }
@@ -93,8 +108,8 @@ typedef
         const value_type &
         const_reference;
 list()
-        : _begin(iterator(*this))
-        , _end(iterator(*this))
+        : _begin(iterator(_head))
+        , _end(iterator(_tail))
 {
 }
 
@@ -135,5 +150,5 @@ list_node _tail = { nullptr, default_value };
 iterator _begin = *this;
 iterator _end;
 };// END CLASS list
-
+#include "list_impl.h"
 } // END namespace

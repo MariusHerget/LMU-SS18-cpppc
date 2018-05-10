@@ -18,12 +18,12 @@ TEST_F(ListTest, StandardConcept)
         LOG_MESSAGE("ListTest.StandardConcept: List__equals");
         ASSERT_EQ(true, v1 == v2);
 
-        LOG_MESSAGE("ListTest.StandardConcept: push_back");
-        v1.push_back(12);
-        v1.push_back(34);
+        LOG_MESSAGE("ListTest.StandardConcept: push_front");
+        v1.push_front(12);
+        v1.push_front(34);
 
 
-        LOG_MESSAGE("ListTest.StandardConcept: push_back");
+        LOG_MESSAGE("ListTest.StandardConcept: push_front");
         ASSERT_EQ(false, v1 == v2);
 
         LOG_MESSAGE("ListTest.StandardConcept: List__assign");
@@ -50,9 +50,9 @@ TEST_F(ListTest, ListConcept)
 
         LOG_MESSAGE("ListTest.ListConcept: List__push_front(56)");
         v.push_front(56);
-        LOG_MESSAGE("ListTest.ListConcept: List__push_back(78)");
+        LOG_MESSAGE("ListTest.ListConcept: List__push_front(78)");
         v.push_front(78);
-        LOG_MESSAGE("ListTest.ListConcept: List__push_back(90)");
+        LOG_MESSAGE("ListTest.ListConcept: List__push_front(90)");
         v.push_front(90);
 
         cpppc::list<int>::iterator viter = v.begin();
@@ -101,18 +101,18 @@ TEST_F(ListTest, ListFIFO)
         LOG_MESSAGE("ListTest.ListFIFO: List__new");
         list<int> v = list<int>();
 
-        LOG_MESSAGE("ListTest.ListFIFO: List__push_back(...)");
-        v.push_back(111);
-        v.push_back(222);
-        v.push_back(333);
-        v.push_back(444);
+        LOG_MESSAGE("ListTest.ListFIFO: List__push_front(...)");
+        v.push_front(111);
+        v.push_front(222);
+        v.push_front(333);
+        v.push_front(444);
         ASSERT_EQ(4,   v.size());
 
         LOG_MESSAGE("ListTest.ListFIFO: List__pop_front(...)");
-        ASSERT_EQ(444, v.pop_back());
-        ASSERT_EQ(333, v.pop_back());
-        ASSERT_EQ(222, v.pop_back());
-        ASSERT_EQ(111, v.pop_back());
+        ASSERT_EQ(111, v.pop_front());
+        ASSERT_EQ(222, v.pop_front());
+        ASSERT_EQ(333, v.pop_front());
+        ASSERT_EQ(444, v.pop_front());
         ASSERT_EQ(0,   v.size());
 }
 }
