@@ -15,6 +15,15 @@ namespace cpppc {
 
   public:
     struct list_node {
+       list_node(list_node * p, ValueT v)
+       : value(v)
+       , next(p) {}
+       list_node(list_node * p)
+       : next(p)
+       , value(0) {}
+       list_node()
+       : next(nullptr)
+       , value(0) {}
        list_node * next;
        ValueT      value;
     };
@@ -78,35 +87,49 @@ namespace cpppc {
          return _list_node->value;
        }
 
+       bool isEmpty() {
+         return (_list_node == 0);
+       }
+
        bool operator==(self_t & rhs) {
          printf("\n !! DEBUG iterator==\n");
          if (static_cast<self_t>(*this)._list_node != 0 && rhs._list_node != 0)
            if (static_cast<self_t>(*this)._list_node->next != nullptr
-                && rhs._list_node->next != nullptr)
+                && rhs._list_node->next != nullptr
+                && static_cast<self_t>(*this)._list_node->value != 0
+                && rhs._list_node->value != 0){
+                  printf("\n !! DEBUG iterator== inner\n");
                return  (this == &rhs || // identity
                         ( _list == rhs._list
                        && ++static_cast<self_t>(*this) == ++rhs
                        && static_cast<self_t>(*this)._list_node->value == rhs._list_node->value   )
-                       );
-            else return this->_list_node->value == rhs._list_node->value;
-          else  return  true;
+                     );}
+            else return this == &rhs;
+            // else return this->_list_node->value == rhs._list_node->value;
+          else if (static_cast<self_t>(*this)._list_node != 0 || rhs._list_node != 0)
+            return false;
+          else
+            return  true;
        }
        bool operator!=(self_t & rhs) {
          printf("\n !! DEBUG iterator!=\n");
          if (static_cast<self_t>(*this)._list_node != 0 && rhs._list_node != 0)
            if (static_cast<self_t>(*this)._list_node->next != nullptr
-                && rhs._list_node->next != nullptr)
+                && rhs._list_node->next != nullptr
+                && static_cast<self_t>(*this)._list_node->value != 0
+                && rhs._list_node->value != 0) {
+                  printf("\n !! DEBUG iterator!=\n");
                return  !(this == &rhs || // identity
                         ( _list == rhs._list
                        && ++static_cast<self_t>(*this) == ++rhs
                        && static_cast<self_t>(*this)._list_node->value == rhs._list_node->value   )
-                       );
+                     );}
             else return !(this->_list_node->value == rhs._list_node->value);
           else  return false;
        }
 
        bool operator==(const self_t & rhs) const {
-         // printf("\n !! DEBUG const iterator==\n");
+         printf("\n !! DEBUG const iterator==\n");
          self_t itt= static_cast<self_t>(*this);
          self_t itrhs= static_cast<self_t>(rhs);
          return  (this == &rhs || // identity
@@ -117,8 +140,8 @@ namespace cpppc {
        }
 
     private:
-       list_node_t * _list_node;
-       list_t * _list;
+       list_node_t * _list_node = 0;
+       list_t * _list = 0;
        // bool _sameNodes(const self_t & rhs) {
        //   bool same = true;
        //    while(self_t(this->_list_node->next, _list) != _list->_end){
@@ -151,6 +174,11 @@ namespace cpppc {
     , _end(ListIterator(this))
     { }
 
+    ~list(){
+      delete _head;
+      delete _tail;
+    }
+
     list(const self_t & other)             = default;
     self_t & operator=(const self_t & rhs) = default;
 
@@ -167,13 +195,14 @@ namespace cpppc {
     bool operator==(const self_t & rhs) const;
     value_type & operator[](int index) ;
     // Herget Implementation
-    void push_back(const ValueT& val);
+    void push_back(const ValueT val);
     value_type pop_back();
 
   private:
-    // same as = { }
-    list_node _head        = { nullptr, default_value };
-    list_node _tail        = { nullptr, default_value };
+    // same as = { } value is not implemented in last elment
+
+    list_node * _head       = list_node();
+    list_node * _tail       = list_node();
 
     // self_t * this
 

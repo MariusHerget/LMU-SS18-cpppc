@@ -28,8 +28,10 @@ TEST_F(ListTest, StandardConcept)
 
         LOG_MESSAGE("ListTest.StandardConcept: List__assign");
         v2 = v1;
+          printf("\n !! DEBUG before ==\n");
 
         ASSERT_EQ(true, v1 == v2);
+          printf("\n !! DEBUG after  ==\n");
 
         LOG_MESSAGE("ListTest.StandardConcept: List__copy");
         list<int> v3 =  list<int>(v1);

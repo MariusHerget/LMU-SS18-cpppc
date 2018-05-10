@@ -25,16 +25,18 @@ bool list<ValueT, default_value>::operator==(const self_t & rhs) const {
 template <
         typename ValueT,
         ValueT default_value>
-void list<ValueT, default_value>::push_back(const ValueT& val){
+void list<ValueT, default_value>::push_back(const ValueT val){
         // create new list_node
         list_node nn = { nullptr, val };
-        if(_head.next == nullptr && _head.value == default_value) {
-                _head = _tail = nn;
-                _begin = ListIterator(&_head, this);
+        if(_begin.isEmpty()) {
+                _head = _tail = &nn;
+                _begin = ListIterator(_head, this);
+                printf("!!! DEBUG _tail pushback %d\n", _tail->value);
                 // _end = ListIterator(&_tail, this);
         } else {
-                _tail.next = &nn;
-                _tail = nn;
+                _tail->next = &nn;
+                _tail = &nn;
+                printf("!!! DEBUG _tail pushback %d\n", _tail->value);
                 // _end = ListIterator(&_tail, this);
         }
 }
@@ -54,7 +56,7 @@ ValueT & list<ValueT, default_value>::operator[](int index){
         if (index < 0 || static_cast<int>(size()) <= index) {
                 throw std::invalid_argument("index out of bounds");
         }
-        iterator tmp = ListIterator(&_head, this);
+        iterator tmp = ListIterator(_head, this);
         for (int i=0; tmp != _end; ++tmp) {
                 if (i == index) return *tmp;
                 i++;
