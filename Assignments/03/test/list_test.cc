@@ -48,12 +48,12 @@ TEST_F(ListTest, ListConcept)
                 printf("\n!!! DEBUG after Size()");
         ASSERT_EQ(1,  v.empty());
 
-        LOG_MESSAGE("ListTest.ListConcept: List__push_back(56)");
-        v.push_back(56);
+        LOG_MESSAGE("ListTest.ListConcept: List__push_front(56)");
+        v.push_front(56);
         LOG_MESSAGE("ListTest.ListConcept: List__push_back(78)");
-        v.push_back(78);
+        v.push_front(78);
         LOG_MESSAGE("ListTest.ListConcept: List__push_back(90)");
-        v.push_back(90);
+        v.push_front(90);
 
         cpppc::list<int>::iterator viter = v.begin();
         cpppc::list<int>::iterator vend  = v.end();
@@ -62,9 +62,9 @@ TEST_F(ListTest, ListConcept)
         LOG_MESSAGE("ListTest.ListConcept: List__at");
         ASSERT_EQ(3,  v.size());
         ASSERT_EQ(0,  v.empty());
-        ASSERT_EQ(56, v[0]);
+        ASSERT_EQ(56, v[2]);
         ASSERT_EQ(78, v[1]);
-        ASSERT_EQ(90, v[2]);
+        ASSERT_EQ(90, v[0]);
 
         for (int i = 0; i < v.size(); i++) {
                 LOG_MESSAGE("ListTest.ListConcept: v[%d] : %d",

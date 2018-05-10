@@ -1,52 +1,32 @@
-
 template <
         typename ValueT,
-        ValueT default_value>
-bool list<ValueT, default_value>::operator==(self_t & rhs){
-        // printf("\n !! DEBUG list==\n");
-        return (this == &rhs || // identity
-                (this->_begin == rhs._begin)
-                );
-}
-// Why does this not work
-// -> invalid operands to binary expression ('const cpppc::list<int, 0>::ListIterator' and 'const cpppc::list<int, 0>::ListIterator')
-//
-template <typename ValueT, ValueT default_value>
-bool list<ValueT, default_value>::operator==(const self_t & rhs) const {
-        // printf("\n !! DEBUG const list==\n");
-        return (this == &rhs || // identity
-                (this->_begin == rhs._begin)
-                );
-}
-
-
-
-
-template <
-        typename ValueT,
-        ValueT default_value>
-void list<ValueT, default_value>::push_back(const ValueT val){
-        // create new list_node
-        list_node nn = { nullptr, val };
-        if(_begin.isEmpty()) {
-                _head = _tail = &nn;
-                _begin = ListIterator(_head, this);
-                printf("!!! DEBUG _tail pushback %d\n", _tail->value);
-                // _end = ListIterator(&_tail, this);
-        } else {
-                _tail->next = &nn;
-                _tail = &nn;
-                printf("!!! DEBUG _tail pushback %d\n", _tail->value);
-                // _end = ListIterator(&_tail, this);
-        }
+        ValueT default_value = ValueT()>
+void list<ValueT, default_value>::push_front(ValueT value) {
+        list_node * node = new list_node();
+        ln->next = &_head;
+        ln->value = value;
+        _head = *node;
 }
 
 template <
         typename ValueT,
-        ValueT default_value>
-ValueT list<ValueT, default_value>::pop_back(){
-        // necessary?
-        return default_value;
+        ValueT default_value = ValueT()>
+ValueT list<ValueT, default_value>::pop_front(ValueT value) {
+        list_node * update = _head.next;
+        ValueT ret = _head.value;
+        delete _head;
+        _head = *update;
+        return ret;
+}
+
+template <
+        typename ValueT,
+        ValueT default_value = ValueT()>
+void list<ValueT, default_value>::insert(ValueT value) {
+        list_node * node = new list_node();
+        ln->next = position._list_node->next;
+        ln->value = value;
+        position._list_node.next = node;
 }
 
 template <
@@ -56,9 +36,17 @@ ValueT & list<ValueT, default_value>::operator[](int index){
         if (index < 0 || static_cast<int>(size()) <= index) {
                 throw std::invalid_argument("index out of bounds");
         }
-        iterator tmp = ListIterator(_head, this);
+        iterator tmp = ListIterator(_begin);
         for (int i=0; tmp != _end; ++tmp) {
                 if (i == index) return *tmp;
                 i++;
         }
+}
+
+template <typename ValueT, ValueT default_value>
+bool list<ValueT, default_value>::operator==(const self_t & rhs) const {
+        // printf("\n !! DEBUG const list==\n");
+        return (this == &rhs || // identity
+                (this->_begin == rhs._begin)
+                );
 }
