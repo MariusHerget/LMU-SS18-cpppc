@@ -1,0 +1,446 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifpackageloaded{hyperref}{}{%
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+}
+\@ifpackageloaded{color}{
+    \PassOptionsToPackage{usenames,dvipsnames}{color}
+}{%
+    \usepackage[usenames,dvipsnames]{color}
+}
+\makeatother
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={},
+            pdftitle={Assignment 4: Iterators, Function Templates},
+            colorlinks=true,
+            citecolor=blue,
+            urlcolor=blue,
+            linkcolor=magenta,
+            pdfborder={0 0 0}
+            }
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+\newcommand{\ImportTok}[1]{{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+\newcommand{\BuiltInTok}[1]{{#1}}
+\newcommand{\ExtensionTok}[1]{{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+\newcommand{\RegionMarkerTok}[1]{{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+\newcommand{\NormalTok}[1]{{#1}}
+\usepackage{longtable,booktabs}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+
+\title{Assignment 4: Iterators, Function Templates}
+\date{}
+
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% HERGET
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems, breakable, skins}
+\newtcbtheorem{example}% environment name
+              {Answer}% Title text
+  {enhanced, % tcolorbox styles
+  attach boxed title to top center={yshift=-2.5mm},
+  colback=white, colframe=black, colbacktitle=white, coltitle=black,
+  boxed title style={size=small,colframe=white},
+  fonttitle=\bfseries,
+  sharp corners=all,
+  breakable
+  }%
+  {ex}% label prefix
+ % END HERGET
+
+\begin{document}
+\maketitle
+
+\textbf{C++ Programming Course, Summer Term 2018}
+
+\href{/assignment-04/a-04/}{Source Code}
+
+\section{4-0: Watch these Talks}\label{watch-these-talks}
+
+A talk at ACCU has just been published on YouTube that summarizes the
+relevance of STL algorithms and explains the mental model behind them
+really well:
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://www.youtube.com/watch?v=bXkWuUe9V2I}{Jonathan Boccara:
+  105 STL Algorithms in Less Than an Hour}
+\end{itemize}
+
+Everything in this talk agrees with the discussion of STL algorithms in
+our lab sessions, and the presentation is stellar.
+
+\begin{quote}
+There is a trap that lies right at the beginning of the path to STL
+algorithms, and this trap is called for\_each.
+\end{quote}
+
+In another talk, Marshall Clow gives an introduction and some hints on
+how to implement good STL algorithm abstractions:
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://www.youtube.com/watch?v=h4Jl1fk3MkQ}{Marshall Clow: STL
+  Algorithms - why you should use them, and how to write your own}
+\end{itemize}
+
+\section{4-1: Algorithms / Function
+Templates}\label{algorithms-function-templates}
+
+In the following, you will implement two algorithms as function
+templates.
+
+Your implementations should be a combination of functions provided by
+the STL and must not contain explicit loops like \texttt{for} or
+\texttt{while}.
+
+You may use any algorithm interface defined in the C++14 standard. For
+example, you may use \texttt{std::minmax} (since C++11) in your
+implementations, but not \texttt{std::for\_each\_n} (C++17).
+
+References:
+
+\begin{itemize}
+\tightlist
+\item
+  C++ Algorithm Library:
+  \url{http://en.cppreference.com/w/cpp/algorithm}
+\item
+  C++ Iterator Library:
+  \url{http://en.cppreference.com/w/cpp/header/iterator}
+\end{itemize}
+
+\subsection{4-1-1: find\_mean\_rep}\label{findux5fmeanux5frep}
+
+Implement a function template \texttt{cpppc::find\_mean\_rep} which
+accepts a range specified by two iterators in the \texttt{InputIterator}
+category and returns an iterator to the element in the range that is
+closest to the mean of the range.
+
+Your implementation should be automatically more efficient for random
+access iterator ranges without specialization.
+
+\textbf{Function interface:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{template} \NormalTok{<}\KeywordTok{typename} \NormalTok{InputIter>}
+\NormalTok{InputIter find_mean_rep(InputIter first, InputIter last);}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Example:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std::vector<}\DataTypeTok{int}\NormalTok{> v \{ }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{40}\NormalTok{, }\DecValTok{50} \NormalTok{\}; }\CommentTok{// mean: 21}
+\KeywordTok{auto} \NormalTok{closest_to_mean_it = cpppc::find_mean_rep(v.begin(), v.end());}
+\CommentTok{// -> iterator at index 3 (|21-30| = 9)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{4-1-2: histogram
+(RandomAccessIterator)}\label{histogram-randomaccessiterator}
+
+Implement a function template \texttt{cpppc::histogram} which accepts a
+range specified by two iterators in the \texttt{InputIterator} category
+and \textbf{replaces} each value by the number of its occurrences in the
+range.
+
+Note that values of the input range are modified.
+
+Values are unique in the result histogram and ordered by their first
+occurrence in the range. The function returns an iterator past the final
+element in the histogram.
+
+Only integer values (int, long, size\_t, \ldots{}) have to be supported.
+
+\textbf{Function interface:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{template} \NormalTok{<}\KeywordTok{typename} \NormalTok{RAIt>}
+\NormalTok{RAIt histogram(RAIt first, RAIt last);}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Example:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std::vector<}\DataTypeTok{int}\NormalTok{> v \{ }\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{7} \NormalTok{\};}
+\KeywordTok{auto} \NormalTok{hist_end = cpppc::histogram(v.begin(), v.end());}
+\CommentTok{// -> 1: 2 occurences}
+\CommentTok{//    5: 3 occurences}
+\CommentTok{//    5: skipped}
+\CommentTok{//    ...}
+\CommentTok{// -> \{ 2, 3, 1, 1, 1 \}  <- occurrences}
+\CommentTok{//      ^  ^  ^  ^  ^}
+\CommentTok{//      |  |  |  |  |}
+\CommentTok{//      1  5  3  4  7    <- value}
+\CommentTok{//}
+\CommentTok{// -> returns iterator at position 5}
+\end{Highlighting}
+\end{Shaded}
+
+\section{4-2: Custom Containers /
+Iterators}\label{custom-containers-iterators}
+
+\subsection{4-2-1: Sparse Array}\label{sparse-array}
+
+Implement a sparse array (see
+\url{https://en.wikipedia.org/wiki/Sparse_array}) container that
+satisfies the \texttt{std::array} interface.
+
+A sparse array is a usually large array with most elements set to a
+default value like 0. Instead of allocating memory for all values, only
+non-default values are actually allocated.
+
+Different from vectors, arrays are static containers so their size does
+not change after instantiation. The values of its elements can be
+iterated and changed, but elements cannot be added or removed.
+
+References:
+
+\begin{itemize}
+\tightlist
+\item
+  std::array in the C++ Standard Template Library:
+  \url{http://en.cppreference.com/w/cpp/container/array}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DataTypeTok{int} \KeywordTok{default} \NormalTok{= }\DecValTok{0}\NormalTok{;}
+\NormalTok{cpppc::sparse_array<}\DataTypeTok{int}\NormalTok{, }\DecValTok{10000}\NormalTok{> sa(}\KeywordTok{default}\NormalTok{);}
+\CommentTok{// no actual values in `sa` yet, all set to default}
+\NormalTok{size_t sa_size = sa.size(); }\CommentTok{// -> 10000}
+\NormalTok{assert(sa[}\DecValTok{345}\NormalTok{] == }\DecValTok{0}\NormalTok{);       }\CommentTok{// returns `default` if no value}
+                            \CommentTok{// set at position}
+
+\NormalTok{sa[}\DecValTok{230}\NormalTok{] = }\DecValTok{23}\NormalTok{;}
+\NormalTok{assert(sa[}\DecValTok{230}\NormalTok{] == }\DecValTok{23}\NormalTok{);}
+
+\NormalTok{sa[}\DecValTok{420}\NormalTok{] = }\DecValTok{42}\NormalTok{;}
+\CommentTok{// two values stored in `sa`}
+
+\CommentTok{// Must be compatible with STL algorithms:}
+
+\KeywordTok{auto} \NormalTok{found_42 = std::find(sa.begin(), sa.end(), }\DecValTok{42}\NormalTok{);}
+\CommentTok{// -> iterator at 'virtual' position 420 (the second 'real' value)}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Notes:}
+
+\begin{itemize}
+\tightlist
+\item
+  Your implementation has to detect assignment of a value reference. Try
+  a temporary proxy:
+  \url{https://en.wikibooks.org/wiki/More_C++_Idioms/Temporary_Proxy}.
+\item
+  Obviously, the \texttt{sparse\_array} cannot provide direct access to
+  its underlying array (as it doesn't exist) so method \texttt{data()}
+  is not provided.
+\end{itemize}
+
+\subsection{4-2-2: Lazy Sequence}\label{lazy-sequence}
+
+Write a class template \texttt{lazy\_sequence} that implements the
+sequence concept and is initialized with its size and a generator
+function.
+
+A lazy sequence does not store elements (unlike containers), instead a
+generator function is used to create values only when they are accessed.
+It is not modifiable, similar to \texttt{const} sequential containers.
+
+We define the \texttt{Sequence} concept, for an instance \texttt{s} of
+sequence type \texttt{S}:
+
+\begin{longtable}[c]{@{}ll@{}}
+\toprule
+Type & Synopsis\tabularnewline
+\midrule
+\endhead
+\texttt{S::value\_type} & Values in the sequence\tabularnewline
+\texttt{S::iterator} & Iterator to \texttt{S::value\_type}, satisfies
+\texttt{RandomAccessIterator}\tabularnewline
+\texttt{S::size\_type} & Type to represent sequence size (length, number
+of values)\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[c]{@{}lll@{}}
+\toprule
+Expression & Returns & Synopsis\tabularnewline
+\midrule
+\endhead
+\texttt{s.begin()} & \texttt{S::iterator} & Iterator on first
+value\tabularnewline
+\texttt{s.end()} & \texttt{S::const\_iterator} & Iterator past final
+value\tabularnewline
+\texttt{s.size()} & \texttt{S::size\_type} &
+\texttt{s.end()\ -\ s.begin()}\tabularnewline
+\texttt{s{[}i{]}} & \texttt{const\ S::value\_type\ \&} or
+\texttt{S::value\_type} & \texttt{*(s.begin()\ +\ i)}\tabularnewline
+\bottomrule
+\end{longtable}
+
+As usual, all types have value semantics (assignment, copy, comparison,
+\ldots{}).
+
+\textbf{Example:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+  \NormalTok{lazy_sequence<}\DataTypeTok{int}\NormalTok{> seq(}\DecValTok{10}\NormalTok{,}
+                        \NormalTok{[](}\DataTypeTok{int} \NormalTok{i) \{}
+                          \KeywordTok{return} \NormalTok{(}\DecValTok{100} \NormalTok{+ i * i);}
+                        \NormalTok{\});}
+
+  \CommentTok{// `seq` does not contain any elements at this point, but it satisfies the}
+  \CommentTok{// STL Sequence Container concept:}
+
+  \NormalTok{std::cout << }\StringTok{"sequence size: "} \NormalTok{<< seq.size() << }\StringTok{'}\CharTok{\textbackslash{}n}\StringTok{'}\NormalTok{;}
+
+  \KeywordTok{auto} \NormalTok{it = seq.begin();}
+  \CommentTok{// still nothing computed}
+
+  \DataTypeTok{int} \NormalTok{first = *it; }\CommentTok{// <-- returns value from generator(it._pos)}
+
+  \KeywordTok{for} \NormalTok{(}\KeywordTok{auto} \NormalTok{e : seq) \{}
+    \CommentTok{// generates values one by one:}
+    \NormalTok{std::cout << e << }\StringTok{" "}\NormalTok{;}
+  \NormalTok{\}}
+  \NormalTok{std::cout << std::endl;}
+  \CommentTok{// prints:}
+  \CommentTok{// 100 101 104 109 116 125 136 149 164 181}
+\end{Highlighting}
+\end{Shaded}
+
+Strictly speaking, there is no \emph{Sequence} concept in C++ or the
+STL.\\
+We will encounter the concept category \emph{Range} for this soon.
+
+\section{4-X: Challenges}\label{x-challenges}
+
+\subsection{4-X-1: Bresenham's Line
+Sequence}\label{x-1-bresenhams-line-sequence}
+
+Make yourself familiar with
+\href{http://graphics.idav.ucdavis.edu/education/GraphicsNotes/Bresenhams-Algorithm.pdf}{Bresenham's
+Line Algorithm} and implement it as sequential concept:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{raster_image img(width, height);}
+
+\NormalTok{raster_point p_from = img[\{x0, y0\}];}
+\NormalTok{raster_point p_to   = img[\{x1, y1\}];}
+
+\NormalTok{raster_line_seq = raster_line_sequence(raster_image, p_from, p_to);}
+
+\KeywordTok{for} \NormalTok{(}\KeywordTok{auto} \NormalTok{line_point : raster_line_seq) \{}
+  \NormalTok{img[line_point].color = black;}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{4-X-2: Skip List}\label{x-2-skip-list}
+
+Implement a class template \texttt{cpppc::map} that satisfies the
+\texttt{std::map} container interface based on a Skip List data
+structure.
+
+References:
+
+\begin{itemize}
+\tightlist
+\item
+  Specification of std::map:
+  \url{http://en.cppreference.com/w/cpp/container/map}
+\item
+  \emph{Skip Lists: A Probabilistic Alternative to Balanced Trees}. W.
+  Pugh, 1990. \url{http://cpppc.pub.lab.nm.ifi.lmu.de/docs/skiplist.pdf}
+\end{itemize}
+
+\end{document}

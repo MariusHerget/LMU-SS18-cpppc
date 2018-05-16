@@ -88,7 +88,8 @@ class ListIterator {
 
         private:
         // list_t * _list = 0;
-list_node_t * _list_node;
+// list_node_t * _list_node;
+        list_node * _node = nullptr
 }; // END CLASS iterator
 
 public:
@@ -109,7 +110,7 @@ typedef
         const_reference;
 list()
         : _begin(iterator(_head))
-        , _end(iterator(_tail))
+        , _end(iterator(_head))
 {
 }
 
@@ -118,8 +119,9 @@ list(const self_t & other)             = default;
 self_t & operator=(const self_t & rhs) = default;
 
 
-iterator         begin()              { _begin; }
-iterator         end()                { _end; }
+public:
+iterator         begin()              { return iterator(_head); }
+iterator         end()                { return _end; }
 const_reference  begin() const        { _begin; }
 const_reference  end()   const        { _end; }
 
@@ -141,14 +143,11 @@ void insert(iterator & position, ValueT value);
 
 
 private:
-// same as = { }
-list_node _head        = { nullptr, default_value };
-list_node _tail = { nullptr, default_value };
+  // list_node * _list_node  = nullptr;
+  iterator    _begin      = *this;
+  iterator    _end        = iterator(nullptr);
 
-// self_t * this
 
-iterator _begin = *this;
-iterator _end;
 };// END CLASS list
 #include "list_impl.h"
 } // END namespace
