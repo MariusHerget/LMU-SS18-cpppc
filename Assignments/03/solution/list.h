@@ -126,7 +126,7 @@ const_reference  begin() const        { _begin; }
 const_reference  end()   const        { _end; }
 
 size_type        size()  const        {
-        printf("\n!!! DEBUG Size() %d / %d\n", _end, _begin);
+        printf("!!! DEBUG Size() %d / %d\n", _end, _begin);
         return end() - begin();
 }
 bool             empty() const        { return (size()==0); }

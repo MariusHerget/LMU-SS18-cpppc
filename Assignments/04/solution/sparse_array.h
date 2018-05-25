@@ -43,6 +43,7 @@ using proxy_reference = typename SparseArrayT::proxy;
 // public functions
 public:
 // Constructors
+sparse_array_iterator() = default;
 sparse_array_iterator(SparseArrayT * array, index_t index)
         : _array(array)
         , _index(index)
@@ -126,10 +127,11 @@ proxy_reference operator[](difference_type offset){
 }
 
 bool operator<(const self_t & other) const {
-        return ((other._index - _index) > 0);
+        printf("\n!!! DEBUG sparse_array_iterator operator<(const self_t & other) const %lu\n",(other._index - (*this)._index));
+        return (other._index - (*this)._index > 0);
 }
 bool operator>(const self_t & other) const {
-        return ((other._index - _index) < 0);
+        return (other<(*this));
 }
 bool operator<=(const self_t & other) const {
         return !(*this > other);
@@ -165,13 +167,30 @@ sparse_array_proxy_ref(const self_t & other)
 }
 
 self_t & operator=(self_t other)  {
-        _sa = other._sa;
-        _index = other._index;
+        printf("\n!!! DEBUG sparse_array_proxy_ref operator=(self_t other)\n");
+        if (&other != this) {
+                _sa = other._sa;
+                _index = other._index;
+        }
         return *this;
 }
 
-void operator=(const value_type &value) {
+value_type operator=(const value_type &value) {
+        // printf("!");
+        // printf("!!! DEBUG sparse_array_proxy_ref operator=(const value_type &value) %d\n", value);
         _sa._data[_index] = value;
+        if(value_type() == value) {
+                this->_sa._data.erase(_index);
+                return value_type();
+        }
+        this->_sa._data[_index] = value;
+        return value;
+        // auto it = _sa._data.find(_index);
+        // if (it  == _sa._data.end())
+        //         _sa._data.insert({_index, value});
+        // else
+        //         it->second = value;
+        // return value
 }
 
 self_t operator--(){
@@ -192,9 +211,15 @@ operator const value_type &() const {
         return iter->second;
 }
 
+bool operator==(const value_type & other) const {
+        return static_cast<const value_type &>(*this) == other;
+}
 
-void swap(self_t & other)
-{
+bool operator!=(const value_type & other) const {
+        return static_cast<const value_type &>(*this) != other;
+}
+
+void swap(self_t & other) {
         std::swap(*this, other);
 }
 
@@ -266,6 +291,17 @@ const iterator   end()       {
 iterator         rbegin()             {
         return iterator(this, size()-1);
 }
+const_iterator cbegin() const {
+        return const_iterator(this, 0);
+}
+const_iterator cend() const {
+        return const_iterator(this, size());
+}
+const_iterator crbegin() const {
+        return const_iterator(this, size()-1);
+}
+
+
 // Front/Back
 value_t &         front()  const {
         return *begin();
@@ -299,10 +335,17 @@ const bool operator==(const self_t & other) const noexcept {
 }
 
 bool operator<(const self_t & other) const {
-        return ((other._sizeA - _sizeA) > 0);
+        // return ((other._sizeA - _sizeA) > 0);
+        // return std::lexicographical_compare(cbegin(), cend()
+        //                                     ,other.cbegin(), other.cend()
+        //                                     );
+        if((*this) == other)
+                return false;
+
+        return std::lexicographical_compare(cbegin(), cend(), other.cbegin(), other.cend());
 }
 bool operator>(const self_t & other) const {
-        return ((other._sizeA - _sizeA) < 0);
+        return !(*this < other);
 }
 bool operator<=(const self_t & other) const {
         return !(*this > other);
@@ -319,7 +362,7 @@ value_t operator[](index_t index) const {
         if (it_match == _data.end()) {
                 return _default;
         }
-        return *it_match;
+        return it_match->second;
 }
 
 proxy_reference operator[](index_t offset) {
@@ -330,20 +373,23 @@ proxy_reference operator[](index_t offset) {
 }
 
 // functions
-void fill(const value_type & v){
-        for(size_t i = 0; i < size(); ++i) {
-                _data[i] = v;
+void fill(const value_type & value){
+        if(value == value_type()) {
+                _data.clear();
+        }
+        else{
+                std::fill(begin(), end(), value);
         }
 }
-// void swap(self_t & other){
-//         std::swap(_data, other._data);
-// }
-void swap(self_t & other) {
-        std::swap_ranges(_data.begin(), _data.end(), other._data.begin(), other._data.end());
+void swap(self_t & other){
+        std::swap(_data, other._data);
 }
+// void swap(self_t & other) {
+// std::swap_ranges(_data.begin(), _data.end(), other._data.begin(), other._data.end());
+// }
 
 private:
-size_t _sizeA;
+size_t _sizeA = 0;
 std::unordered_map<index_t, value_t> _data;
 value_t _default;
 }; // END sparse_array

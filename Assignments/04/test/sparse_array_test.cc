@@ -11,7 +11,8 @@
 #include <array>
 
 // you might want to set this to 1 for debugging
-constexpr int NMULT = 100000;
+constexpr int NMULT = 10;
+// constexpr int NMULT = 100000;
 
 using namespace cpppc;
 
@@ -91,6 +92,7 @@ TEST_F(SparseArrayTest, ArrayInterface)
   ASSERT_EQ(*sa2.rbegin(), sa2.back());
   ASSERT_EQ(*sa2.rbegin(), 999);
 
+  LOG_MESSAGE("SparseArrayTest.ArrayInterface Fill sa2");
   // You know what you didn't do in a long time? Swapping to disk.
   // Say hello to oomkiller from fuchsto.
   sa2.fill(42);
@@ -99,6 +101,7 @@ TEST_F(SparseArrayTest, ArrayInterface)
   ASSERT_EQ(sa2[10],  42);
   ASSERT_EQ(sa2[100], 42);
   ASSERT_EQ(sa2[300], 42);
+    LOG_MESSAGE("SparseArrayTest.ArrayInterface Fill sa1");
 
   sa1.fill(42);
   ASSERT_EQ(sa1, sa2);
@@ -130,4 +133,3 @@ TEST_F(SparseArrayTest, ArrayInterface)
   LOG_MESSAGE("SparseArrayTest.ArrayInterface: sa2 = { %s }",
               range_to_string(sa2.begin(), sa2.begin() + 16).c_str());
 }
-
