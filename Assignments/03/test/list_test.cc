@@ -9,110 +9,52 @@
 #include <gtest/gtest.h>
 namespace cpppc {
 
-TEST_F(ListTest, StandardConcept)
-{
-        LOG_MESSAGE("ListTest.StandardConcept: List__new");
-        list<int> v1 = list<int>();
-        list<int> v2 = list<int>();
 
-        LOG_MESSAGE("ListTest.StandardConcept: List__equals");
-        ASSERT_EQ(true, v1 == v2);
+  TEST_F(ListTest, StandardConcept)
+  {
+    LOG_MESSAGE("listTest.StandardConcept: new");
+    list<int> v1;
+    list<int> v2;
 
-        LOG_MESSAGE("ListTest.StandardConcept: push_front");
-        v1.push_front(12);
-        v1.push_front(34);
+    LOG_MESSAGE("listTest.StandardConcept: equals");
+    ASSERT_EQ(1, v1 == v2);
 
+    v1.push_front(34);
+    v1.push_front(12);
 
-        LOG_MESSAGE("ListTest.StandardConcept: push_front");
-        ASSERT_EQ(false, v1 == v2);
+    ASSERT_EQ(12, *(v1.begin()));
+    ASSERT_EQ(34, *(++v1.begin()));
 
-        LOG_MESSAGE("ListTest.StandardConcept: List__assign");
-        v2 = v1;
-          printf("\n !! DEBUG before ==\n");
+    ASSERT_EQ(0, v1 == v2);
 
-        ASSERT_EQ(true, v1 == v2);
-          printf("\n !! DEBUG after  ==\n");
+    LOG_MESSAGE("listTest.StandardConcept: assign");
+    v1 = v2;
 
-        LOG_MESSAGE("ListTest.StandardConcept: List__copy");
-        list<int> v3 =  list<int>(v1);
+    ASSERT_EQ(1, v1 == v2);
 
-        ASSERT_EQ(true, v1 == v3);
-}
-TEST_F(ListTest, ListConcept)
-{
-        LOG_MESSAGE("ListTest.ListConcept: List__new");
-        list<int> v = list<int>();
-                printf("\n!!! DEBUG before Size()");
+    LOG_MESSAGE("listTest.StandardConcept: copy");
+    list<int> v3(v1);
 
-        ASSERT_EQ(0,  v.size());
-                printf("\n!!! DEBUG after Size()");
-        ASSERT_EQ(1,  v.empty());
+    ASSERT_EQ(1, v1 == v3);
+  }
 
-        LOG_MESSAGE("ListTest.ListConcept: List__push_front(56)");
-        v.push_front(56);
-        LOG_MESSAGE("ListTest.ListConcept: List__push_front(78)");
-        v.push_front(78);
-        LOG_MESSAGE("ListTest.ListConcept: List__push_front(90)");
-        v.push_front(90);
+  TEST_F(ListTest, listLIFO)
+  {
+    LOG_MESSAGE("listTest.listLIFO: new");
+    list<int> v;
 
-        cpppc::list<int>::iterator viter = v.begin();
-        cpppc::list<int>::iterator vend  = v.end();
-        ASSERT_EQ(vend, viter + v.size());
+    LOG_MESSAGE("listTest.listLIFO: push_front(...)");
+    v.push_front(444);
+    v.push_front(333);
+    v.push_front(222);
+    v.push_front(111);
+    ASSERT_EQ(4,   v.size());
 
-        LOG_MESSAGE("ListTest.ListConcept: List__at");
-        ASSERT_EQ(3,  v.size());
-        ASSERT_EQ(0,  v.empty());
-        ASSERT_EQ(56, v[2]);
-        ASSERT_EQ(78, v[1]);
-        ASSERT_EQ(90, v[0]);
-
-        for (int i = 0; i < v.size(); i++) {
-                LOG_MESSAGE("ListTest.ListConcept: v[%d] : %d",
-                            i, v[i]);
-        }
-
-        LOG_MESSAGE("ListTest.ListConcept: List__copy");
-        list<int> vcopy = list<int>(v);
-
-        LOG_MESSAGE("ListTest.ListConcept: List__begin, List__end");
-        viter = v.begin();
-        vend  = v.end();
-
-        for (; viter != vend; ++viter) {
-                *viter += 100;
-        }
-
-        LOG_MESSAGE("ListTest.ListConcept: List__at");
-        for (int i = 0; i < vcopy.size(); i++) {
-                ASSERT_EQ(v[i], vcopy[i] + 100);
-        }
-
-        LOG_MESSAGE("ListTest.ListConcept: List__assign(v_empty) ");
-        list<int> v_empty = list<int>();
-        v = v_empty;
-
-        ASSERT_EQ(true, v==v_empty);
-        ASSERT_EQ(0, v.size());
-        ASSERT_EQ(1, v.empty());
-}
-
-TEST_F(ListTest, ListFIFO)
-{
-        LOG_MESSAGE("ListTest.ListFIFO: List__new");
-        list<int> v = list<int>();
-
-        LOG_MESSAGE("ListTest.ListFIFO: List__push_front(...)");
-        v.push_front(111);
-        v.push_front(222);
-        v.push_front(333);
-        v.push_front(444);
-        ASSERT_EQ(4,   v.size());
-
-        LOG_MESSAGE("ListTest.ListFIFO: List__pop_front(...)");
-        ASSERT_EQ(111, v.pop_front());
-        ASSERT_EQ(222, v.pop_front());
-        ASSERT_EQ(333, v.pop_front());
-        ASSERT_EQ(444, v.pop_front());
-        ASSERT_EQ(0,   v.size());
-}
+    LOG_MESSAGE("listTest.listLIFO: pop_front(...)");
+    ASSERT_EQ(111, v.pop_front());
+    ASSERT_EQ(222, v.pop_front());
+    ASSERT_EQ(333, v.pop_front());
+    ASSERT_EQ(444, v.pop_front());
+    ASSERT_EQ(0,   v.size());
+  }
 }
