@@ -109,19 +109,7 @@
 \fi
 
 % HERGET
-\usepackage{tcolorbox}
-\tcbuselibrary{theorems, breakable, skins}
-\newtcbtheorem{example}% environment name
-              {Answer}% Title text
-  {enhanced, % tcolorbox styles
-  attach boxed title to top center={yshift=-2.5mm},
-  colback=white, colframe=black, colbacktitle=white, coltitle=black,
-  boxed title style={size=small,colframe=white},
-  fonttitle=\bfseries,
-  sharp corners=all,
-  breakable
-  }%
-  {ex}% label prefix
+\input{/home/herget/LMU/templates/ans-env.tex}
  % END HERGET
 
 \begin{document}
@@ -265,7 +253,9 @@ Only integer values (int, long, size\_t, \ldots{}) have to be supported.
 Iterators}\label{custom-containers-iterators}
 
 \subsection{4-2-1: Sparse Array}\label{sparse-array}
-
+\note{
+        Do we need swap, <, >, <=, >=? in Array and Iterator
+}
 Implement a sparse array (see
 \url{https://en.wikipedia.org/wiki/Sparse_array}) container that
 satisfies the \texttt{std::array} interface.
@@ -324,6 +314,7 @@ References:
 \end{itemize}
 
 \subsection{4-2-2: Lazy Sequence}\label{lazy-sequence}
+\note{Testing?}
 
 Write a class template \texttt{lazy\_sequence} that implements the
 sequence concept and is initialized with its size and a generator

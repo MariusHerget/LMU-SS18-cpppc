@@ -1,0 +1,337 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifpackageloaded{hyperref}{}{%
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+}
+\@ifpackageloaded{color}{
+    \PassOptionsToPackage{usenames,dvipsnames}{color}
+}{%
+    \usepackage[usenames,dvipsnames]{color}
+}
+\makeatother
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={},
+            pdftitle={Assignment 5: Move Semantics},
+            colorlinks=true,
+            citecolor=blue,
+            urlcolor=blue,
+            linkcolor=magenta,
+            pdfborder={0 0 0}
+            }
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+\newcommand{\ImportTok}[1]{{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+\newcommand{\BuiltInTok}[1]{{#1}}
+\newcommand{\ExtensionTok}[1]{{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+\newcommand{\RegionMarkerTok}[1]{{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+\newcommand{\NormalTok}[1]{{#1}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+
+\title{Assignment 5: Move Semantics}
+\date{}
+
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% HERGET
+\input{/home/herget/LMU/templates/ans-env.tex}
+ % END HERGET
+
+\begin{document}
+\maketitle
+
+\textbf{C++ Programming Course, Summer Term 2018}
+
+\section{5-0 Have a Cookie}\label{have-a-cookie}
+
+\begin{itemize}
+\tightlist
+\item
+  Have a look at \href{https://cppinsights.io/}{cppinsights.io}.
+\item
+  Understand what the tool does, experiment with it a bit.
+\item
+  Rejoice.
+\end{itemize}
+
+\section{5-1 Containers Revisited}\label{containers-revisited}
+
+References:
+
+\begin{itemize}
+\tightlist
+\item
+  \href{/session-05/}{Session 5 notes} and
+  \href{/session-05/01-move/}{discussed example}
+\item
+  \href{https://pagefault.blog/2018/03/01/common-misconception-with-cpp-move-semantics/}{Common
+  misconception with C++ move semantics}
+\end{itemize}
+
+\subsection{5-1-0 CppCon and Chill}\label{cppcon-and-chill}
+
+Watch these talks:
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://www.youtube.com/watch?v=AKtHxKJRwp4}{Don't Help the
+  Compiler}
+\item
+  \href{https://www.youtube.com/watch?v=kPR8h4-qZdk}{The strange details
+  of std::string at Facebook}
+\end{itemize}
+
+These talks address a rather experienced (5+ years in industry)
+audience. Pay close attention, pause, think, rewatch. It will be
+overwhelming. That's okay, speakers at CppCon are beasts.
+
+\subsection{5-1-1 list Move Semantics}\label{list-move-semantics}
+
+\begin{itemize}
+\tightlist
+\item
+  Add a test case to the test suite of
+  \texttt{List\textless{}T\textgreater{}} from
+  \href{/assignment-03/}{assignment 3} to validate moving / copy elision
+  of temporary \texttt{List\textless{}T\textgreater{}} objects.
+\item
+  Validate that your test case in fact creates / copies / assigns
+  temporary \texttt{List\textless{}T\textgreater{}} instances (gdb,
+  \href{http://cppinsights.io}{cppinsights.io}, logging \ldots{}
+  anything that works for you).
+\item
+  Extend your implementation of \texttt{List\textless{}T\textgreater{}}
+  from assignment 3 by move semantics.
+\item
+  Validate that temporary instances are moved (use techniques from step
+  2).
+\end{itemize}
+
+\subsection{5-1-2 sparse\_array Move
+Semantics}\label{sparseux5farray-move-semantics}
+
+Same as 5-1-1 for \texttt{sparse\_array\textless{}T,N\textgreater{}}:
+
+\begin{itemize}
+\tightlist
+\item
+  Add a test case to the test suite of
+  \texttt{sparse\_array\textless{}T,N\textgreater{}} from
+  \href{/assignment-04/}{assignment 4} to validate moving / copy elision
+  of temporary \texttt{sparse\_array\textless{}T,N\textgreater{}}
+  objects.
+\item
+  Validate that your test case in fact creates / copies / assigns
+  temporary \texttt{sparse\_array\textless{}T,N\textgreater{}} instances
+  (gdb, \href{http://cppinsights.io}{cppinsights.io}, logging \ldots{}
+  anything that works for you).
+\item
+  Extend your implementation of
+  \texttt{sparse\_array\textless{}T,N\textgreater{}} from assignment 4
+  by move semantics.
+\item
+  Validate that temporary instances are moved (use techniques from step
+  2).
+\end{itemize}
+
+\section{5-2 Compiler Explorer}\label{compiler-explorer}
+
+Analyze the following simplified variant of the
+\href{/session-05/01-move/}{example discussed in session 5} in
+\href{http://godbolt.org}{compiler explorer}.
+
+How does it help you to check if move semantics of \texttt{ArrayWrapper}
+work as expected?
+
+(Hint: You don't need to read assembly)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\OtherTok{#include <string>}
+
+\OtherTok{#define LOG(scope, msg) do \{ }\NormalTok{\textbackslash{}}
+\OtherTok{\} while(0)}
+
+
+\KeywordTok{template} \NormalTok{<}\KeywordTok{class} \NormalTok{T>}
+\KeywordTok{class} \NormalTok{ArrayWrapper \{}
+  \KeywordTok{typedef} \NormalTok{ArrayWrapper<T> self_t;}
+
+\KeywordTok{public}\NormalTok{:}
+  \KeywordTok{typedef} \NormalTok{T   value_type;}
+  \KeywordTok{typedef} \NormalTok{T * iterator;}
+
+\KeywordTok{public}\NormalTok{:}
+
+  \NormalTok{ArrayWrapper()}
+  \NormalTok{: _data(}\KeywordTok{new} \NormalTok{T[}\DecValTok{64}\NormalTok{]),}
+    \NormalTok{_size(}\DecValTok{64}\NormalTok{),}
+    \NormalTok{_name(}\StringTok{"d"}\NormalTok{) \{}
+    \NormalTok{LOG(}\StringTok{"ArrayWrapper()"}\NormalTok{,}
+        \StringTok{"ooo --- default construct "} \NormalTok{<< _name);}
+  \NormalTok{\}}
+
+  \NormalTok{ArrayWrapper(}\DataTypeTok{int} \NormalTok{n, std::string name)}
+  \NormalTok{: _data(}\KeywordTok{new} \NormalTok{T[n]),}
+    \NormalTok{_size(n),}
+    \NormalTok{_name(name) \{}
+    \NormalTok{LOG(}\StringTok{"ArrayWrapper(n,s)"}\NormalTok{,}
+        \StringTok{"*** --- create "} \NormalTok{<< _name);}
+  \NormalTok{\}}
+
+  \CommentTok{// move constructor}
+  \NormalTok{ArrayWrapper(self_t && other)}
+      \NormalTok{: _data(other._data),}
+        \NormalTok{_size(other._size),}
+        \NormalTok{_name(std::move(other._name)) \{}
+    \NormalTok{LOG(}\StringTok{"ArrayWrapper(self &&)"}\NormalTok{,}
+        \StringTok{"((( --- move  * <-- "} \NormalTok{<< _name);}
+    \NormalTok{other._data = NULL;}
+    \NormalTok{other._size = }\DecValTok{0}\NormalTok{;}
+  \NormalTok{\}}
+
+  \CommentTok{// copy constructor}
+  \NormalTok{ArrayWrapper(}\DataTypeTok{const} \NormalTok{self_t & other)}
+  \NormalTok{: _data(}\KeywordTok{new} \NormalTok{T[other._size]),}
+    \NormalTok{_size(other._size),}
+    \NormalTok{_name(other._name) \{}
+    \NormalTok{LOG(}\StringTok{"ArrayWrapper(const self &)"}\NormalTok{,}
+        \StringTok{"=== --- create copy of "} \NormalTok{<< _name);}
+    \KeywordTok{for} \NormalTok{(}\DataTypeTok{int} \NormalTok{i = }\DecValTok{0}\NormalTok{; i < _size; ++i) \{}
+      \NormalTok{_data[i] = other._data[i];}
+    \NormalTok{\}}
+    \NormalTok{LOG(}\StringTok{"ArrayWrapper(const self &)"}\NormalTok{,}
+        \StringTok{"=== --- copied "} \NormalTok{<< _size << }\StringTok{" values *_*'"}\NormalTok{);}
+  \NormalTok{\}}
+
+  \NormalTok{~ArrayWrapper() \{}
+    \NormalTok{LOG(}\StringTok{"~ArrayWrapper()"}\NormalTok{,}
+        \StringTok{"xxx --- destroy "} \NormalTok{<< _name << (}
+          \NormalTok{((NULL != _data) ? }\StringTok{" and free data"} \NormalTok{: }\StringTok{" and go home"}\NormalTok{)));}
+    \KeywordTok{delete}\NormalTok{[] _data;}
+  \NormalTok{\}}
+
+  \NormalTok{iterator begin() }\DataTypeTok{const} \NormalTok{\{}
+    \KeywordTok{return} \NormalTok{_data;}
+  \NormalTok{\}}
+
+  \NormalTok{iterator end() }\DataTypeTok{const} \NormalTok{\{}
+    \KeywordTok{return} \NormalTok{_data + _size;}
+  \NormalTok{\}}
+
+  \DataTypeTok{int} \NormalTok{size() }\DataTypeTok{const} \NormalTok{\{}
+    \KeywordTok{return} \NormalTok{_size;}
+  \NormalTok{\}}
+
+ \KeywordTok{private}\NormalTok{:}
+  \NormalTok{T               * _data;}
+  \DataTypeTok{int}               \NormalTok{_size;}
+  \DataTypeTok{const} \NormalTok{std::string _name;}
+\NormalTok{\};}
+
+
+\NormalTok{ArrayWrapper<}\DataTypeTok{int}\NormalTok{>}
+\NormalTok{return_array_by_value(}
+  \DataTypeTok{int}         \NormalTok{size,}
+  \NormalTok{std::string name) \{}
+  \KeywordTok{if} \NormalTok{(size % }\DecValTok{2} \NormalTok{== }\DecValTok{0}\NormalTok{) \{}
+    \KeywordTok{return} \NormalTok{ArrayWrapper<}\DataTypeTok{int}\NormalTok{>(size / }\DecValTok{2}\NormalTok{, name);}
+  \NormalTok{\} }\KeywordTok{else} \NormalTok{\{}
+    \KeywordTok{return} \NormalTok{ArrayWrapper<}\DataTypeTok{int}\NormalTok{>(size * }\DecValTok{2}\NormalTok{, name);}
+  \NormalTok{\}}
+\NormalTok{\}}
+
+\DataTypeTok{int}
+\NormalTok{accept_array_by_value(}
+  \NormalTok{ArrayWrapper<}\DataTypeTok{int}\NormalTok{> a) \{}
+  \NormalTok{ArrayWrapper<}\DataTypeTok{int}\NormalTok{> mine(std::move(a));}
+  \NormalTok{mine.begin()[}\DecValTok{0}\NormalTok{] = }\DecValTok{345}\NormalTok{;}
+  \KeywordTok{return} \NormalTok{mine.begin()[}\DecValTok{0}\NormalTok{];}
+\NormalTok{\}}
+
+\DataTypeTok{int} \NormalTok{main() \{}
+  \NormalTok{accept_array_by_value(}
+     \NormalTok{return_array_by_value(}\DecValTok{234}\NormalTok{, }\StringTok{"X"}\NormalTok{)}
+  \NormalTok{);}
+
+  \KeywordTok{return} \DecValTok{0}\NormalTok{;}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\end{document}
