@@ -6,7 +6,8 @@ LDFLAGS=-lpthread -L${GTEST_BASE}/lib -lgtest
 INCLUDES=-I${GTEST_BASE}/include -I../
 
 OBJS = testsuite.o \
-			 list_test.o
+			 list_test.o \
+			 sparse_array_test.o
 
 .DEFAULT: all
 all: $(OBJS) testsuite.bin
