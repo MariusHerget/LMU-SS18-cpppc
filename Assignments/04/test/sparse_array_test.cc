@@ -1,7 +1,7 @@
 
 #include "sparse_array_test.h"
 
-#include <solution/sparse_array2.h>
+#include <solution/sparse_array.h>
 
 #include <gtest/gtest.h>
 

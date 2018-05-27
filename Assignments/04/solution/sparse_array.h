@@ -167,6 +167,7 @@ sparse_array_proxy_ref() = delete; // REFERENCE ist niemals default constructabl
 sparse_array_proxy_ref(SparseArrayT & sa, index_t offset)
         : _sa(sa), _index(offset) {
 }
+sparse_array_proxy_ref(const self_t & other) = default;
 
 self_t & operator=(self_t other)  {
         // printf("\n!!! DEBUG sparse_array_proxy_ref operator=(self_t other)\n");
@@ -177,6 +178,7 @@ self_t & operator=(self_t other)  {
         return *this;
 }
 
+
 void operator=(const value_type &value) {
         // printf("!");
         // printf("!!! DEBUG sparse_array_proxy_ref operator=(const value_type &value) %d\n", value);
@@ -186,7 +188,6 @@ void operator=(const value_type &value) {
         else
                 it->second = value;
 }
-
 // self_t operator--(){
 //         if((this->_sa._data[_index] -1) == value_type()) {
 //                 this->_sa._data.erase(_index);
@@ -214,8 +215,10 @@ void operator=(const value_type &value) {
 // }
 
 void swap(self_t & other) {
-        std::swap(_sa, other._sa);
-        std::swap(_index, other._index);
+        printf("\n!!! DEBUG sparse_array_proxy_ref swap %d / %d", _index, other._index);
+        // std::swap(_sa, other._sa);
+        // std::swap(_index, other._index);
+        std::swap(*this, other);
 }
 
 operator value_type() const { // conversion
@@ -408,6 +411,7 @@ void fill(const value_t & value){
         }
 }
 void swap(self_t & other){
+        printf("\n!!! DEBUG sparse_array swap %d / %d", size(), other.size());
         _data.swap(other._data);
         std::swap(_sizeA, other._sizeA);
         std::swap(_default, other._default);
@@ -442,21 +446,15 @@ const_reference sparseValue(index_t index) const {
 
 private:
 size_t _sizeA = 0;
-std::unordered_map<index_t, value_t> _data{};
+std::unordered_map<index_t, value_t> _data {};
 value_t _default {};
 }; // END sparse_array
 
-template <class T, std::size_t N>
-void swap(sparse_array<T, N> a, sparse_array<T, N> b) {
-        a.swap(b);
+template<typename T>
+void swap(detail::sparse_array_proxy_ref<T> p1, detail::sparse_array_proxy_ref<T> p2)
+{
+        p1.swap(p2);
 }
-
-template <class T, std::size_t N>
-void swap(detail::sparse_array_proxy_ref<sparse_array<T, N> > a,
-          detail::sparse_array_proxy_ref<sparse_array<T, N> > b) {
-        a.swap(b);
-}
-
 } // namespace cpppc
 
 #endif // CPPPC__S03__SPARSE_ARRAY_H__INCLUDED
