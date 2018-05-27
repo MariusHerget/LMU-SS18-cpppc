@@ -1,0 +1,90 @@
+[1mdiff --git a/Assignments/04/solution/sparse_array.h b/Assignments/04/solution/sparse_array.h[m
+[1mindex be583eb..75eb954 100644[m
+[1m--- a/Assignments/04/solution/sparse_array.h[m
+[1m+++ b/Assignments/04/solution/sparse_array.h[m
+[36m@@ -12,7 +12,7 @@[m [mnamespace cpppc {[m
+ namespace detail {[m
+ [m
+ template <class T, std::size_t N>[m
+[31m-class sparse_array;[m
+[32m+[m[32mclass sparse_array; // Forwarddeclaration[m
+ [m
+ template <class SparseArrayT>[m
+ class sparse_array_proxy_ref;[m
+[36m@@ -22,7 +22,9 @@[m [mvoid swap(sparse_array_proxy_ref<T> p1, sparse_array_proxy_ref<T> p2)[m
+ {[m
+         p1.swap(p2);[m
+ }[m
+[32m+[m
+ // ############################################################################[m
+[32m+[m
+ template <class SparseArrayT>[m
+ class sparse_array_iterator[m
+ {[m
+[36m@@ -33,7 +35,7 @@[m [mtypedef std::size_t index_t;[m
+ typedef std::size_t size_t;[m
+ [m
+ [m
+[31m-public:[m
+[32m+[m[32mpublic: // Needed for STL algorithms[m
+ using iterator_category = std::random_access_iterator_tag;[m
+ using value_type    = typename SparseArrayT::value_type;[m
+ using difference_type   = std::ptrdiff_t;[m
+[36m@@ -43,7 +45,7 @@[m [musing proxy_reference = typename SparseArrayT::proxy;[m
+ // public functions[m
+ public:[m
+ // Constructors[m
+[31m-sparse_array_iterator() = default;[m
+[32m+[m[32msparse_array_iterator() = default; // Iterator muss default constructable sein![m
+ sparse_array_iterator(SparseArrayT * array, index_t index)[m
+         : _array(array)[m
+         , _index(index)[m
+[36m@@ -142,7 +144,7 @@[m [mbool operator>=(const self_t & other) const {[m
+ [m
+ private:[m
+ // Member[m
+[31m-SparseArrayT *  _array;[m
+[32m+[m[32mSparseArrayT * _array;[m
+ size_t _index;[m
+ }; // END sparse_array_iterator[m
+ [m
+[36m@@ -156,7 +158,7 @@[m [musing value_type =  typename SparseArrayT::value_type;[m
+ using index_t = typename SparseArrayT::index_t;[m
+ [m
+ public:[m
+[31m-sparse_array_proxy_ref() = delete;[m
+[32m+[m[32msparse_array_proxy_ref() = delete; // REFERENCE ist niemals default constructable[m
+ sparse_array_proxy_ref(SparseArrayT & sa, index_t offset)[m
+         : _sa(sa), _index(offset) {[m
+ }[m
+[36m@@ -175,16 +177,16 @@[m [mself_t & operator=(self_t other)  {[m
+         return *this;[m
+ }[m
+ [m
+[31m-value_type operator=(const value_type &value) {[m
+[32m+[m[32mself_t operator=(const value_type &value) {[m
+         // printf("!");[m
+         // printf("!!! DEBUG sparse_array_proxy_ref operator=(const value_type &value) %d\n", value);[m
+         _sa._data[_index] = value;[m
+         if(value_type() == value) {[m
+                 this->_sa._data.erase(_index);[m
+[31m-                return value_type();[m
+[32m+[m[32m                return *this;[m
+         }[m
+         this->_sa._data[_index] = value;[m
+[31m-        return value;[m
+[32m+[m[32m        return *this;[m
+         // auto it = _sa._data.find(_index);[m
+         // if (it  == _sa._data.end())[m
+         //         _sa._data.insert({_index, value});[m
+[36m@@ -223,6 +225,10 @@[m [mvoid swap(self_t & other) {[m
+         std::swap(*this, other);[m
+ }[m
+ [m
+[32m+[m[32moperator value_type() const { // conversion[m
+[32m+[m[32m  return _sa.sparseValue(_index); // TODO implement[m
+[32m+[m[32m}[m
+[32m+[m
+ private:[m
+ SparseArrayT & _sa;[m
+ index_t _index;[m
