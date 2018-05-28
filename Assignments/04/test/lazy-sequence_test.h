@@ -4,16 +4,16 @@
 #include <gtest/gtest.h>
 #include "TestBase.h"
 
-class SparseArrayTest : public ::testing::Test {
+class LazySequenceTest : public ::testing::Test {
 
 public:
 
-  SparseArrayTest() {
-    LOG_MESSAGE("Opening test suite: LazySequenceTest");
+  LazySequenceTest() {
+    LOG_MESSAGE("Opening test suite: SparseArrayTest");
   }
 
-  virtual ~SparseArrayTest() {
-    LOG_MESSAGE("Closing test suite: LazySequenceTest");
+  virtual ~LazySequenceTest() {
+    LOG_MESSAGE("Closing test suite: SparseArrayTest");
   }
 
   virtual void SetUp() {
