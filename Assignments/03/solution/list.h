@@ -111,11 +111,54 @@ typedef
         const_reference;
 list()
 {
+        // printf("\n!!!DEBUG called default constructor\n");
 }
 
-// list<uint32_t>(list<int32_t>()) says 'nouh'
+// copy
 list(const self_t & other)             = default;
-self_t & operator=(const self_t & rhs) = default;
+// assignment
+self_t & operator=(const self_t & other) {
+        // printf("\n!!!DEBUG called assign operator\n");
+        if (this != &other)
+        {
+                // Free the existing resource.
+                while (!empty()) {pop_front();}
+
+                // Copy all nodes
+                // _head = nullptr;
+                int size=other.size();
+                for (int i=size; i>0; i--) {
+                        push_front(other[i-1]);
+                }
+        }
+        return *this;
+};
+self_t & operator=(self_t && other) {
+        // printf("\n!!!DEBUG called Move-Assignment operator %lu\n",other._size);
+        if (this != &other)  {
+                // Clean up own list
+                while (!empty()) {pop_front();}
+                // Steal others data
+                _head = other._head;
+                _size = other._size;
+                // Prepare Other for destructor
+                other._head = nullptr;
+                other._size = 0;
+        }
+        return *this;
+
+};
+// destructor
+~list() = default;
+// MOVE
+list(self_t&& other)
+        : _head(other._head)
+        , _size(other._size)
+{
+        // printf("\n!!!DEBUG called Move constructor %lu\n\n", other._size);
+        other._head = NULL;
+        other._size = 0;
+}
 
 
 public:
@@ -125,12 +168,12 @@ iterator         begin()              {
 iterator         end()                {
         return iterator(NULL);
 }
-// const_iterator  begin() const {
-//         return  begin();
-// }
-// const_iterator  end()   const {
-//         return end();
-// }
+const_iterator  begin() const {
+        return iterator(_head);
+}
+const_iterator  end()   const {
+        return iterator(NULL);
+}
 
 size_type        size()  const {
         return _size;
@@ -139,7 +182,8 @@ bool             empty() const {
         return (size()==0);
 }
 bool operator==(self_t & rhs);
-value_type & operator[](int index);
+ValueT & operator[](const int index);
+const ValueT & operator[](const int index) const;
 
 // Since I do  not know how to implement push_back I will implemented
 // push_front.

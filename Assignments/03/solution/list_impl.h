@@ -2,6 +2,7 @@ template <
         typename ValueT,
         ValueT default_value>
 void list<ValueT, default_value>::push_front(ValueT value) {
+        // printf("\n!!!DEBUG called push_front %lu\n",value);
         _head = new list_node {_head, value};
         ++_size;
 }
@@ -35,14 +36,29 @@ void list<ValueT, default_value>::insert(iterator & position, ValueT value) {
 template <
         typename ValueT,
         ValueT default_value>
-ValueT & list<ValueT, default_value>::operator[](int index){
+ValueT & list<ValueT, default_value>::operator[](const int index){
+        // printf("\n!!!DEBUG called operator[]\n");
         if (index < 0 || static_cast<int>(size()) <= index) {
                 throw std::invalid_argument("index out of bounds");
         }
-        iterator tmp = begin();
-        for (int i=0; tmp != (*this).end(); ++tmp, i++) {
-                if (i == index) return *tmp;
+        int i = index;
+        iterator tmp = iterator(_head);
+        while (tmp!=end() && 0<i){tmp++;i--;}
+        return *tmp;
+}
+
+template <
+        typename ValueT,
+        ValueT default_value>
+const ValueT & list<ValueT, default_value>::operator[](const int index) const {
+        // printf("\n!!!DEBUG called const operator[] const %d of %lu\n", index,_size);
+        if (index < 0 || static_cast<int>(size()) <= index) {
+                throw std::invalid_argument("index out of bounds");
         }
+        int i = index;
+        iterator tmp = iterator(_head);
+        while (tmp!=end() && 0<i){tmp++;i--;}
+        return *tmp;
 }
 
 template <typename ValueT, ValueT default_value>

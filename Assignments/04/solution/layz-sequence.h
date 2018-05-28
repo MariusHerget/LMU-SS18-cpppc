@@ -144,7 +144,7 @@ value_type back() const {
 
 
 private:
-int _size;
+int _size = 0;
 std::function<value_t(int)> _fun;
 }; // END CLASS lazy_sequence
 } // NAMEspace cpppc

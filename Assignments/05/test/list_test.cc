@@ -4,7 +4,7 @@
 
 #include "list_test.h"
 
-#include <solution/list.h>
+#include <../03/solution/list.h>
 #include <stdio.h>
 #include <gtest/gtest.h>
 namespace cpppc {

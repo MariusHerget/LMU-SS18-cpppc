@@ -53,6 +53,7 @@ sparse_array_iterator() = default; // Iterator muss default constructable sein!
 sparse_array_iterator(SparseArrayT * array, index_t index)
         : _array(array)
         , _index(index)
+        , _swapindex(index)
 {
 }
 ~sparse_array_iterator() = default;
@@ -129,8 +130,10 @@ proxy_reference operator[](difference_type offset){
 }
 
 bool operator<(const self_t & other) const {
-        // printf("\n!!! DEBUG sparse_array_iterator operator<(const self_t & other) const %lu\n",(other._index - (*this)._index));
-        return proxy_reference(*_array, _index) < proxy_reference(*other._array, other._index);
+printf("\n!!! DEBUG sparse_array_iterator operator<(const self_t & other) const %lu\n",(other._index - (*this)._index));
+        bool ret = proxy_reference(*_array, _index, _swapindex) < proxy_reference(*other._array, other._index);
+        _swapindex++;
+        return ret;
 }
 bool operator>(const self_t & other) const {
         return proxy_reference(*_array, _index) > proxy_reference(*other._array, other._index);
@@ -150,6 +153,7 @@ bool operator>=(const self_t & other) const {
         return !(*this < other);
 }
 
+index_t _swapindex;
 private:
 // Member
 SparseArrayT * _array;
@@ -169,6 +173,9 @@ public:
 sparse_array_proxy_ref() = delete; // REFERENCE ist niemals default constructable
 sparse_array_proxy_ref(SparseArrayT & sa, index_t offset)
         : _sa(sa), _index(offset) {
+}
+sparse_array_proxy_ref(SparseArrayT & sa, index_t offset, index_t swapindex)
+        : _sa(sa), _index(offset), _swapindex(swapindex) {
 }
 sparse_array_proxy_ref(const self_t & other) = default;
 
@@ -193,14 +200,15 @@ void operator=(const value_type &value) {
 }
 
 bool operator<(const self_t & rhs) const {
+printf("\n!!! DEBUG sparse_array_proxy_ref operator<(const self_t & other) const %d (%d) < %d (%d)  = %d\n", _sa.at(_index), _index, rhs._sa.at(rhs._index), rhs._index, ret);
         bool ret = _sa.at(_index) < rhs._sa.at(rhs._index);
-        // printf("\n!!! DEBUG sparse_array_proxy_ref operator<(const self_t & other) const %d (%d) < %d (%d)  = %d\n", _sa.at(_index), _index, rhs._sa.at(rhs._index), rhs._index, ret);
+        printf("\n!!! DEBUG sparse_array_proxy_ref operator<(const self_t & other) const %d (%d) < %d (%d)  = %d\n", _sa.at(_index), _index, rhs._sa.at(rhs._index), rhs._index, ret);
         return ret;
 }
 
 bool operator>(const self_t & rhs) const {
         bool ret = _sa.at(_index) > rhs._sa.at(rhs._index);
-        // printf("\n!!! DEBUG sparse_array_proxy_ref operator>(const self_t & other) const %d > %d   = %d\n", _sa.at(_index), rhs._sa.at(rhs._index), ret);
+        printf("\n!!! DEBUG sparse_array_proxy_ref operator>(const self_t & other) const %d > %d   = %d\n", _sa.at(_index), rhs._sa.at(rhs._index), ret);
         return ret;
 }
 
@@ -231,13 +239,13 @@ bool operator>(const self_t & rhs) const {
 // }
 
 void swap(self_t & other) {
-        // printf("\n!!! DEBUG sparse_array_proxy_ref swap  %d / %d", _index, other._index);
-        value_type tmp = _sa.at(_index);
-          auto it = _sa._data.find(_index);
-          it->second = other._sa.at(other._index);
-          auto ito = _sa._data.find(other._index);
-          ito->second = tmp;
-          // printf("\n!!! DEBUG sparse_array_proxy_ref swap2 %d / %d", tmp, other._sa.at(other._index));
+        printf("\n!!! DEBUG sparse_array_proxy_ref swap  %d / %d", _swapindex, other._index);
+        value_type tmp = _sa.at(_swapindex);
+        auto it = _sa._data.find(_swapindex);
+        it->second = other._sa.at(other._index);
+        auto ito = _sa._data.find(other._index);
+        ito->second = tmp;
+        printf("\n!!! DEBUG sparse_array_proxy_ref swap2 %d / %d", tmp, other._sa.at(other._index));
         other._sa = _sa;
         // std::swap(*this, other);
 }
@@ -247,6 +255,7 @@ operator value_type() const { // conversion
 }
 
 // DEBUG
+index_t _swapindex;
 private:
 SparseArrayT & _sa;
 index_t _index;
@@ -433,7 +442,7 @@ void fill(const value_t & value){
         }
 }
 void swap(self_t & other){
-        // printf("\n!!! DEBUG sparse_array swap %d / %d", size(), other.size());
+        printf("\n!!! DEBUG sparse_array swap %d / %d", size(), other.size());
         _data.swap(other._data);
         std::swap(_sizeA, other._sizeA);
         std::swap(_default, other._default);
@@ -475,6 +484,7 @@ value_t _default {};
 template<typename T>
 void swap(detail::sparse_array_proxy_ref<T> p1, detail::sparse_array_proxy_ref<T> p2)
 {
+        printf("!!! DEBUG before proxy swap \n");
         p1.swap(p2);
 }
 } // namespace cpppc

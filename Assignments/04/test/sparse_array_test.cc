@@ -146,3 +146,47 @@ TEST_F(SparseArrayTest, ArrayInterface)
         LOG_MESSAGE("SparseArrayTest.ArrayInterface3: sa2 = { %s }",
                     range_to_string(sa2.begin(), sa2.begin() + 16).c_str());
 }
+
+
+TEST_F(SparseArrayTest, DEBUGSORT)
+{
+        LOG_MESSAGE("SparseArrayTest.ArrayInterface");
+
+        constexpr int N = 20 * NMULT;
+        sparse_array<int, N> sa1;
+        sparse_array<int, N> sa2;
+
+        sa2.fill(std::numeric_limits<int>::max());
+        int idx;
+        idx = 2;
+        std::generate_n(sa2.begin() + 10, 5,
+                        [&]() {
+                return idx *= 2;
+        });
+
+        LOG_MESSAGE("SparseArrayTest.ArrayInterface1: sa2 = { %s }",
+                    range_to_string(sa2.begin(), sa2.end() ).c_str());
+        idx = 2;
+        std::for_each(sa2.begin() + 10,
+                      sa2.begin() + 10 + 5,
+                      [&](int v) {
+                ASSERT_EQ(idx *= 2, v);
+        });
+
+        std::sort(sa2.begin(), sa2.end());
+
+        LOG_MESSAGE("SparseArrayTest.ArrayInterface2: sa2 = { %s }",
+                    range_to_string(sa2.begin(), sa2.end()).c_str());
+
+        idx = 2;
+        std::for_each(sa2.begin(),
+                      sa2.begin() + 5,
+                      [&](int v) {
+                LOG_MESSAGE("SparseArrayTest.ArrayInterface.debugSeach: %d at { %lu }",idx*2,
+                            sa2.debug_search(idx * 2));
+                ASSERT_EQ(idx *= 2, v);
+        });
+
+        LOG_MESSAGE("SparseArrayTest.ArrayInterface3: sa2 = { %s }",
+                    range_to_string(sa2.begin(), sa2.begin() + 5).c_str());
+}
