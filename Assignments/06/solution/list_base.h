@@ -1,8 +1,6 @@
 #include <iterator>
 
 namespace cpppc {
-
-// template<typename ValueT, ValueT default_value> class list;
   template <
 	  typename ValueT,
 	  ValueT default_value = ValueT()>
@@ -14,23 +12,23 @@ namespace cpppc {
 	          std::size_t
 	          size_type;
 public:
-
 	  struct list_node {
 		  list_node * next;
 		  ValueT value;
 		  };
+	  using list_node_t = list_node;
 
-	  class ListIterator {
-		  typedef typename
-		          //list<ValueT, default_value>
-		          list::self_t
-		          list_t;
-		  typedef typename
-		          list_t::list_node
-		          list_node_t;
-		  typedef typename
-		          list_t::ListIterator
-		          self_t;
+	  template <class Derived>
+	  class ForwardIteratorBase {
+private:
+		  using derived_t = Derived;
+		  using self_t = ForwardIteratorBase <Derived>;
+		  derived_t & derived() {
+			  return static_cast<derived_t &>(*this);
+			  }
+		  constexpr const derived_t & derived() const {
+			  return static_cast<const derived_t &>(*this);
+			  }
 public:
 		  using iterator_category = std::forward_iterator_tag;
 		  using value_type = ValueT;
@@ -38,60 +36,88 @@ public:
 		  using pointer = value_type *;
 		  using reference = value_type &;
 
-		  ListIterator() = delete;
-
-		  ListIterator(list_node_t * node)
-			  : _node(node)
-			  {
-			  }
-
+protected: // evtl protected
+		  ForwardIteratorBase() = default;
+public:
 		  self_t & operator+(int index) {
-			  self_t it = static_cast<self_t>(*this);
+			  auto it = self_t(*this);
 			  for (int i=0; i <= index; it++) {
 				  if (index == i) break;
 				  i++;
 				  }
-			  return it;
-			  }
-
-		  self_t & operator++() {
-			  _node = _node->next;
 			  return *this;
 			  }
-
+		  self_t & operator++() {
+			  derived().increment(1);
+			  return *this;
+			  }
 		  self_t operator++(int) {
-			  iterator old = *this;
-			  _node = _node->next;
+			  auto old = *this;
+			  derived().increment(1);
 			  return old;
 			  }
-
 		  const ValueT & operator*() const {
-			  return _node->value;
+			  return derived().dereference();
 			  }
-
-		  self_t operator=(const self_t & rhs){
-			  if(!(this == &rhs)) {
-				  _node = rhs._node;
-				  }
-			  return *this;
-			  }
-
 		  ValueT & operator*() {
-			  return _node->value;
+			  return derived().dereference();
 			  }
-
-		  bool operator==(const self_t & rhs) const {
-			  return  (this == &rhs ||                // identity
-			           ( _node == rhs._node));
-			  }
-
 		  bool operator!=(const self_t rhs) const {
 			  return !(*this == rhs);
 			  }
+		  bool operator==(const self_t & rhs) const {
+			  return  (this == &rhs);
+			  }
+		  };
+
+
+
+	  // template <class T>
+	  class ListIterator
+		      : public ForwardIteratorBase<ListIterator>
+		  {
+		  using list_t = typename list::self_t;
+		  using list_node_t = list::list_node_t;
+		  using self_t = ListIterator;
+		  using base_t = ForwardIteratorBase<ListIterator>;
+		  using value_type = ValueT;
+
+public:
+		  ListIterator() = delete;
+		  ListIterator(list_node_t * node)
+			  : _node(node)
+			  // , ForwardIteratorBase(0)
+			  {
+			  }
+		  ~ListIterator() = default;
+		  // Copy
+		  ListIterator(self_t & rhs) = default;
+		  // // Move
+		  ListIterator(self_t && rhs) = default;
+		  // Assignment
+		  self_t & operator=(const self_t &rhs) = default;
+		  // Move-Assignment
+		  self_t & operator=(self_t &&rhs) = default;
+
+
+		  value_type &  dereference() {
+			  return _node->value;
+			  }
+		  void increment(int offset) {
+			  for (int i=0; i < offset; i++)
+				  _node = _node->next;
+			  }
+		  bool operator==(const self_t & rhs) const {
+			  return (base_t::operator==(rhs) ||
+			          ( _node == rhs._node));
+			  }
+// void decrement(int offset) { increment(-offset); }
 
 private:
-		  list_node_t * _node;
-		  }; // END CLASS iterator
+		  list_node_t * _node = nullptr;
+		  };
+
+
 
 public:
 	  typedef
@@ -163,16 +189,16 @@ public:
 
 public:
 	  iterator         begin()              {
-		  return iterator(_head);
+		  return iterator {_head};
 		  }
 	  iterator         end()                {
-		  return iterator(NULL);
+		  return iterator {nullptr};
 		  }
 	  const_iterator  begin() const {
-		  return iterator(_head);
+		  return iterator {_head};
 		  }
 	  const_iterator  end()   const {
-		  return iterator(NULL);
+		  return iterator {nullptr};
 		  }
 
 	  size_type        size()  const {
@@ -198,10 +224,10 @@ public:
 
 
 private:
-	  list_node * _head = NULL;    // = &_tail;
+	  list_node_t * _head = NULL; // = &_tail;
 	  size_t _size = 0;
 
 
 	  };// END CLASS list
-#include "list_impl.h"
+#include "list_impl_base.h"
   } // END namespace
