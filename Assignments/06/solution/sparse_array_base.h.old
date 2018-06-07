@@ -35,8 +35,7 @@ namespace detail {
 		  }
 	  public:
 		  using iterator_category = std::random_access_iterator_tag;
-		  using ValueType = typename derived_t::value_type;
-      using value_type = ValueType;
+		  using value_type = typename T::value_type;
 		  using difference_type = typename T::difference_type;
 		  using proxy_reference = sparse_array_proxy_ref<T>;
 		  using const_reference = const value_type &;

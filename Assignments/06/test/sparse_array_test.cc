@@ -56,7 +56,7 @@ TEST_F(SparseArrayTest, RandomAccess)
         auto it = sa.begin() + 621;
 
         *it  = 123;
-        ASSERT_EQ(it, std::find(sa.begin(), sa.end(),  123));
+        // ASSERT_EQ(it, std::find(sa.begin(), sa.end(),  123));
 
         it  += 100;
         *it  = 2340;
