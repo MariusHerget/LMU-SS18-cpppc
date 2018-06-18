@@ -1,0 +1,333 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifpackageloaded{hyperref}{}{%
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+}
+\@ifpackageloaded{color}{
+    \PassOptionsToPackage{usenames,dvipsnames}{color}
+}{%
+    \usepackage[usenames,dvipsnames]{color}
+}
+\makeatother
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={},
+            pdftitle={Assignment 7},
+            colorlinks=true,
+            citecolor=blue,
+            urlcolor=blue,
+            linkcolor=magenta,
+            pdfborder={0 0 0}
+            }
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+\newcommand{\ImportTok}[1]{{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+\newcommand{\BuiltInTok}[1]{{#1}}
+\newcommand{\ExtensionTok}[1]{{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+\newcommand{\RegionMarkerTok}[1]{{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+\newcommand{\NormalTok}[1]{{#1}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+
+\usepackage{listings} % Required for insertion of code
+\title{Assignment 7}
+\date{}
+
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+% HERGET
+\input{/home/herget/LMU/templates/ans-env.tex}
+
+\lstset{basicstyle={\ttfamily},literate={↓}{$\downarrow{}$}{1}}
+ % END HERGET
+\begin{document}
+\maketitle
+
+\textbf{C++ Programming Course, Summer Term 2018}
+
+\begin{quote}
+``Because I'm hard, you will not like me.\\
+\hspace*{0.333em}But the more you hate me, the more you will learn.''\\
+-- \href{https://www.youtube.com/watch?v=3j3_iPskjxk}{Gunnery
+Sgt.~Hartman}\\
+\hspace*{0.333em}\hspace*{0.333em}\hspace*{0.333em}(gunned down by one
+of his recruits a few weeks later, so \ldots{} because of a private)
+\end{quote}
+
+\section{7-1 Fixing the Google Tech
+Interview}\label{fixing-the-google-tech-interview}
+
+Google has an official YouTube channel for recruiting software engineers
+where they published this video of a staged tech interview, presumably
+to demonstrate what Google would expect from candidates:
+
+\url{https://www.youtube.com/watch?v=XKu_SEDAykw}
+
+For reasons one can only speculate about, comments have been disabled
+for this video.
+
+Wipe the floor with the C++ implementation that is showcased as an
+acceptable solution\\
+(at \href{https://youtu.be/XKu_SEDAykw?t=15m29s}{15:29} in the video):
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Shake your head in disbelief and disgust
+    %\problemAnswer{
+        \begin{lstlisting}
+        (╯°□°）╯︵ ┻━┻
+        ┬─┬﻿ ノ( ゜-゜ノ)
+        ┻━┻ ︵ヽ(`Д´)ﾉ︵﻿ ┻━┻
+        \end{lstlisting}
+%    }
+\item
+  Provide an improved variant of the \texttt{HasPairWithSum} function\\
+   (feel free to also improve its name)
+\item
+  Provide use cases to explain in which numerous ways the original
+  implementation is lacking and why your improvements are essential\\
+   (add insult to injury: discuss parallelization aspects in particular)
+
+   \problemAnswer{
+        UseCases:
+        \begin{itemize}
+            \item Numbers are not int
+            \item Numbers are not stored in a Vector
+            \item No parallelization is implemented -> large number of items take very long :(
+        \end{itemize}
+        Improvements:
+        \begin{itemize}
+            \item Templated function which works with ranges and any suitable type / container
+        \end{itemize}
+   }
+\item
+  Become aware that you got pretty good at C++
+\end{enumerate}
+
+\section{7-2 Act Like You Got a Pair}\label{act-like-you-got-a-pair}
+
+The utility template \texttt{std::pair\textless{}A,B\textgreater{}} is a
+useful companion due to its utmost simplicity and predictability: just a
+struct of two values \texttt{first} and \texttt{second} with independent
+types.
+
+Experiment with minimal examples to answer the following questions:
+
+\begin{itemize}
+\tightlist
+\item
+  How do comparison operators of
+  \texttt{pair\textless{}A,B\textgreater{}} depend on types \texttt{A}
+  and \texttt{B}?
+\item
+  How can we specify comparison of
+  \texttt{pair\textless{}A0,B0\textgreater{}} and
+  \texttt{pair\textless{}A1,B1\textgreater{}}?
+\item
+  What is the benefit of \texttt{std::get} over \texttt{pair.first} /
+  \texttt{pair.second}\\
+   (use compiler explorer)
+\item
+  Why don't we just always use \texttt{std::get}?
+\end{itemize}
+
+The most traditional ways to represent a range are:
+
+\begin{itemize}
+\tightlist
+\item
+  a pair of iterators
+\item
+  a pair of an iterator and an offset
+\end{itemize}
+
+Implement as minimal proof-of-concepts:
+
+\begin{itemize}
+\tightlist
+\item
+  Specialize \texttt{std::make\_pair} for iterator and offset, that
+  is:\\
+   Define a variant of \texttt{std::make\_pair(Iter,int)} which only
+  matches parameter types \texttt{Iter} that provide a type definition
+  \texttt{iterator\_category}
+\item
+  Define
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{std::begin(std::pair\textless{}Iter,int\textgreater{}\ p)}\\
+     returning \texttt{std::get\textless{}0\textgreater{}(p)}
+  \item
+    \texttt{std::end(std::pair\textless{}Iter,int\textgreater{}\ p)}\\
+     returning
+    \texttt{std::advance(std::get\textless{}0\textgreater{}(p),\ std::get\textless{}1\textgreater{}(p))}
+  \end{itemize}
+\end{itemize}
+
+Use compiler explorer to check that your specializations have no
+overhead.
+
+A usage example:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std::vector<std::string> v \{}
+   \StringTok{"Monday"}\NormalTok{, }\StringTok{"Tuesday"}\NormalTok{, }\StringTok{"Wednesday"}\NormalTok{,}
+   \StringTok{"Thursday"}\NormalTok{, }\StringTok{"Brainfryday"}\NormalTok{, }\StringTok{"Saturday"}\NormalTok{, }\StringTok{"Sunday"} \NormalTok{\};}
+
+\KeywordTok{auto} \NormalTok{range = std::make_pair(v.begin(), }\DecValTok{6}\NormalTok{);}
+
+\KeywordTok{for} \NormalTok{(}\DataTypeTok{const} \KeywordTok{auto} \NormalTok{& value : range) \{}
+   \NormalTok{std::cout << value << }\StringTok{'}\CharTok{\textbackslash{}n}\StringTok{'}\NormalTok{;}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\section{7-3 Iterate, Evaluate, Destroy}\label{iterate-evaluate-destroy}
+
+References:
+
+\begin{itemize}
+\tightlist
+\item
+  \url{http://en.cppreference.com/w/cpp/algorithm}
+\end{itemize}
+
+\subsection{7-3-1 Algorithm Categories}\label{algorithm-categories}
+
+Like container categories (sequential, associative, wrapper), STL
+algorithms are categorized into conceptual groups.
+
+Two of those are \emph{Modifying Sequence Operation} and
+\emph{Non-Modifying Sequence Operation}.
+
+\begin{itemize}
+\tightlist
+\item
+  In the \href{http://en.cppreference.com/w/cpp/algorithm}{overview of
+  STL algorithms}, algorithms like \texttt{std::sort} and
+  \texttt{std::partition} are not in die \emph{Modifying} category. Why?
+
+  \problemAnswer{
+  \texttt{std::sort} and  \texttt{std::partition} are in the \texttt{Partitioning / Sorting operations}.
+  }
+\item
+  Are there algorithms that return their result as a new sequence? Why?
+  Discuss a minimal use-case to illustrate this.
+\end{itemize}
+
+\subsection{7-3-2 Iterator Invalidation}\label{iterator-invalidation}
+
+\begin{itemize}
+\tightlist
+\item
+  Which algorithms allow to add or remove elements from their input
+  ranges?
+\item
+  Explain how \texttt{std::list}, \texttt{std::deque},
+  \texttt{std::vector} and \texttt{std::map} differ in iterator
+  invalidation rules.\\
+   Also discuss the differences between iterator invalidation rules for
+  erasure (removing container elements) and insertion (adding elements).
+\end{itemize}
+
+\section{7-4 Runtimes / They are
+a-Changin'}\label{runtimes-they-are-a-changin}
+
+\subsection{7-4-0 Prerequisites}\label{prerequisites}
+
+Clone \emph{Celero} from \url{https://github.com/DigitalInBlue/Celero}
+and experiment with the examples in the distribution.
+
+\subsection{7-4-1 Shaming Virtual}\label{shaming-virtual}
+
+Let's assume a colleague of yours uses virtual for virtually everything.
+
+\begin{itemize}
+\item
+  Implement micro-benchmarks using Celero that demonstrate the
+  disadvantages of \texttt{virtual} (runtime polymorphism) in the most
+  drastic way you can.
+\item
+  Evaluate performance of CRTP vs.~virtual in a micro-benchmark.\\
+   You can use the CRTP iterator base classes from your solution to
+  assignment 6 if you want.
+\end{itemize}
+
+\end{document}
