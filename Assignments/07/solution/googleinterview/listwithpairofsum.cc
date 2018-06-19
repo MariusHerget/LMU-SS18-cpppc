@@ -49,6 +49,9 @@ bool searchSumUnsorted(ItStart && first, ItEnd && last, T sum) {
 	// Fill unoredered map with number and count how many times it is present
 	//  --> Performance boost in find if many elements are duplicated
 	//  --> already searching for duplicated elements which form the sum
+	//  -->  parallelization: unordered_map is shared object with mutexes on only specific keys. (Possible?)
+	//  --> Further improvements: Own hasfunktion for buckets --> possible
+	// 			solution for parallelization as well 
 	std::unordered_map<T, std::size_t> map;
 	for (auto it = first; it != last; ++it) {
 	    auto itm = map.find(*it);
@@ -114,7 +117,7 @@ int main() {
 	std::random_device rnd_device;
 	// Specify the engine and distribution.
 	std::mt19937 mersenne_engine {rnd_device()};  // Generates random integers
-	std::uniform_int_distribution<int> dist {1, 100};
+	std::uniform_int_distribution<int> dist {1, 3};
 
 	auto gen = [&dist, &mersenne_engine](){
 		 return dist(mersenne_engine);
