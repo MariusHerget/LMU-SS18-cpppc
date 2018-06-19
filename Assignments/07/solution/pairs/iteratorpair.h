@@ -8,10 +8,10 @@ namespace std {
     class iteratorToRange;
     template<class Iter>
     decltype(auto)
-    ibegin(pair<Iter, int> && p);
+    begin(pair<Iter, int> && p);
     template<class Iter>
     decltype(auto)
-    iend(pair<Iter, int> && p);
+    end(pair<Iter, int> && p);
 
     template<class Iter, class T>
     decltype(auto)
@@ -32,11 +32,11 @@ namespace std {
 
     public:
       auto begin() {
-        return detail::ibegin<Iter>(std::pair<Iter, T>(_begin, _offset));
+        return detail::begin<Iter>(std::pair<Iter, T>(_begin, _offset));
       }
 
       auto end() {
-        return detail::iend<Iter>(std::pair<Iter, T>(_begin, _offset));
+        return detail::end<Iter>(std::pair<Iter, T>(_begin, _offset));
       }
 
     private:
@@ -46,12 +46,12 @@ namespace std {
 
     template<class Iter>
     decltype(auto)
-    ibegin(pair<Iter, int> && p) {
+    begin(pair<Iter, int> && p) {
       return std::get<0>(p);
     }
     template<class Iter>
     decltype(auto)
-    iend(pair<Iter, int> && p) {
+    end(pair<Iter, int> && p) {
       return std::advance(std::get<0>(p), std::get<1>(p));
     }
 
