@@ -12,8 +12,7 @@ namespace cpppc {
 namespace detail {
 
 // Forward declaration
-  template <class T, std::size_t N>
-  class sparse_array;
+template <class T, std::size_t N> class sparse_array;
 // Forward declaration
   template <class SparseArrayT>
   class sparse_array_proxy_ref;

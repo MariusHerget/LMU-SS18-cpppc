@@ -213,14 +213,14 @@ Experiment with minimal examples to answer the following questions:
             \item Always use STL provides methods if possible
             \item Get Element by value types
             \item "For rvalue pair objects (2), the function returns an rvalue reference (as if forward was used)." (cplusplus.com)
-            \item difference?!?!
-            \item compiler explanation please!
+            \item After compile time there is no difference.
+            \item The only advantage auf \texttt{std::get} is that all parameter need to be known at compile time and therefore a code does not compile if one paramter is unknown.
         \end{itemize}
       }
 \item
   Why don't we just always use \texttt{std::get}?
      \problemAnswer{
-            ???
+            Since there is no difference after compile time it does not matter which method we use.
      }
 \end{itemize}
 
@@ -348,7 +348,14 @@ Two of those are \emph{Modifying Sequence Operation} and
   invalidation rules.\\
    Also discuss the differences between iterator invalidation rules for
   erasure (removing container elements) and insertion (adding elements).
-    \problemAnswer{TODO}
+    \problemAnswer{
+        \begin{description}
+            \item[\texttt{std::list}] invalidates on deleted list elements
+            \item[\texttt{std::deque}] invalidates all iterators
+            \item[\texttt{std::vector}] no invalidation of iterators
+            \item[\texttt{std::map}] 
+        \end{description}
+    }
 \end{itemize}
 
 \section{7-4 Runtimes / They are
