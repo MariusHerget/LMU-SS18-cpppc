@@ -1,5 +1,8 @@
 #include <celero/Celero.h>
 
+#include "virtual.h"
+#include "crtp.h"
+#include <iostream>
 #include <random>
 
 #ifndef WIN32
@@ -9,50 +12,87 @@
 
 ///
 /// This is the main(int argc, char** argv) for the entire celero program.
-/// You can write your own, or use this macro to insert the standard one into the project.
+/// You can write your own, or use this macro to insert the standard one into
+/// the project.
 ///
 CELERO_MAIN
 
 std::random_device RandomDevice;
 std::uniform_int_distribution<int> UniformDistribution(0, 1024);
 
-///
-/// In reality, all of the "Complex" cases take the same amount of time to run.
-/// The difference in the results is a product of measurement error.
-///
-/// Interestingly, taking the sin of a constant number here resulted in a
-/// great deal of optimization in clang and gcc.
-///
-BASELINE(DemoSimple, Baseline, 10, 1000000)
-{
-    celero::DoNotOptimizeAway(static_cast<float>(sin(UniformDistribution(RandomDevice))));
+static const int probSpaceStart = 128;
+static const int probSpaceEnd   = 4096;
+
+class Shaming : public celero::TestFixture {
+public:
+  Shaming() {}
+
+  // It's ironic that we are shaming virtual and to do this we are using
+  // a framework which implements virtual :D
+  virtual std::vector<std::pair<int64_t, uint64_t>>
+  getExperimentValues() const override {
+    std::vector<std::pair<int64_t, uint64_t>> problemSpace;
+
+    // ExperimentValues is part of the base class and allows us to specify
+    // some values to control various test runs to end up building a nice graph.
+    for (int64_t elements = probSpaceStart; elements <= int64_t(probSpaceEnd); elements *= 2) {
+      problemSpace.push_back(std::make_pair(int64_t(elements), uint64_t(0)));
+    }
+
+    return problemSpace;
+  }
+
+  /// Before each sample, build a vector of random integers.
+  virtual void setUp(int64_t experimentValue) override {
+    this->arraySize = experimentValue;
+  }
+
+  // Before each iteration
+  virtual void onExperimentStart(int64_t) override {
+    this->array.resize(this->arraySize);
+    for (int64_t i = 0; i < this->arraySize; i++) {
+      this->array[i] = rand();
+    }
+    // std::cout << "!!! " << arraySize << "  " << array.size() << " !!!";
+    sum = 0;
+  }
+
+  // After each iteration
+  virtual void onExperimentEnd() override {
+    // std::cout << "\t" << sum;
+    this->array.clear();
+  }
+
+  // After each sample
+  virtual void tearDown() override {}
+
+  std::vector<int64_t> array;
+  int64_t arraySize;
+  long sum;
+};
+
+static const int SamplesCount = 2000;
+static const int IterationsCount = 20;
+
+BASELINE_F(badVirtual, directAccess, Shaming, SamplesCount, IterationsCount) {
+  for (int64_t i = 0; i < arraySize; i++) {
+    sum += array.at(i) * array.at(i) *2;
+  }
 }
 
-///
-/// Run a test consisting of 1 sample of 710000 operations per measurement.
-/// There are not enough samples here to likely get a meaningful result.
-///
-BENCHMARK(DemoSimple, Complex1, 1, 710000)
-{
-    celero::DoNotOptimizeAway(static_cast<float>(sin(fmod(UniformDistribution(RandomDevice), 3.14159265))));
+BENCHMARK_F(badVirtual, Virtual, Shaming, SamplesCount, IterationsCount) {
+  // auto v = new VectorImpl<int64_t, std::vector<int64_t> *>(array);
+  auto v = new BadVectorImpl();
+  v->setArray(&array);
+  for (int64_t i = 0; i < arraySize; i++) {
+    sum += v->get(i);
+  }
 }
 
-///
-/// Run a test consisting of 30 samples of 710000 operations per measurement.
-/// There are not enough samples here to get a reasonable measurement
-/// It should get a Basline number lower than the previous test.
-///
-BENCHMARK(DemoSimple, Complex2, 30, 710000)
-{
-    celero::DoNotOptimizeAway(static_cast<float>(sin(fmod(UniformDistribution(RandomDevice), 3.14159265))));
-}
-
-///
-/// Run a test consisting of 60 samples of 710000 operations per measurement.
-/// There are not enough samples here to get a reasonable measurement
-/// It should get a Basline number lower than the previous test.
-///
-BENCHMARK(DemoSimple, Complex3, 60, 710000)
-{
-    celero::DoNotOptimizeAway(static_cast<float>(sin(fmod(UniformDistribution(RandomDevice), 3.14159265))));
+BENCHMARK_F(badVirtual, CRTP, Shaming, SamplesCount, IterationsCount) {
+  // auto v = new VectorImpl<int64_t, std::vector<int64_t> *>(array);
+  auto v = new GoodVectorImpl(&array);
+  for (int64_t i = 0; i < arraySize; i++) {
+    sum += v->get(i);
+  }
 }

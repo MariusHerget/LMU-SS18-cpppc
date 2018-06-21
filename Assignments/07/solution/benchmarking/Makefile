@@ -11,7 +11,7 @@ OBJS = badVirtualDuDuDu.o
 all: clean run
 
 run: $(OBJS) badVirtualDuDuDu
-	./badVirtualDuDuDu
+	./badVirtualDuDuDu.out
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ $(LIBS)
@@ -20,7 +20,7 @@ run: $(OBJS) badVirtualDuDuDu
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@ $(LIBS)
 
 badVirtualDuDuDu: badVirtualDuDuDu.o
-	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@ $(LIBS)
+	$(CC) $(CFLAGS) $(INCLUDES) $< -o $@.out $(LIBS)
 
 .PHONY: clean
 clean:
