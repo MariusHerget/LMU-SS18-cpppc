@@ -9,6 +9,7 @@ public:
 
 protected:
   auto getSquare(int index) const {
+    array->at(index)++;
     return array->at(index) * array->at(index);
   }
   std::vector<int64_t> *array = nullptr;

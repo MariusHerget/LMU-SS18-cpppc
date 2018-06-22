@@ -1,7 +1,7 @@
 #include <celero/Celero.h>
 
-#include "virtual.h"
 #include "crtp.h"
+#include "virtual.h"
 #include <iostream>
 #include <random>
 
@@ -20,8 +20,8 @@ CELERO_MAIN
 std::random_device RandomDevice;
 std::uniform_int_distribution<int> UniformDistribution(0, 1024);
 
-static const int probSpaceStart = 128;
-static const int probSpaceEnd   = 4096;
+static const int probSpaceStart = 512;
+static const int probSpaceEnd = 16384;
 
 class Shaming : public celero::TestFixture {
 public:
@@ -35,7 +35,8 @@ public:
 
     // ExperimentValues is part of the base class and allows us to specify
     // some values to control various test runs to end up building a nice graph.
-    for (int64_t elements = probSpaceStart; elements <= int64_t(probSpaceEnd); elements *= 2) {
+    for (int64_t elements = probSpaceStart; elements <= int64_t(probSpaceEnd);
+         elements *= 2) {
       problemSpace.push_back(std::make_pair(int64_t(elements), uint64_t(0)));
     }
 
@@ -76,7 +77,8 @@ static const int IterationsCount = 20;
 
 BASELINE_F(badVirtual, directAccess, Shaming, SamplesCount, IterationsCount) {
   for (int64_t i = 0; i < arraySize; i++) {
-    sum += array.at(i) * array.at(i) *2;
+    array.at(i)++;
+    sum += array.at(i) * array.at(i) * 2;
   }
 }
 
