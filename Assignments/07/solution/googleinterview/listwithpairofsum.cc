@@ -36,12 +36,6 @@ bool searchSumSorted(ItStart && first, ItEnd && last, T sum) {
 	return false;
 }
 
-// we want to work with ranges:
-template<class Range, class T>
-decltype(auto)HasPairWithSumSorted(Range && range, T && sum) {
-	return searchSumSorted(std::begin(range), std::end(range), sum);
-}
-
 
 template<class ItStart, class ItEnd, class T>
 bool searchSumUnsorted(ItStart && first, ItEnd && last, T sum) {
@@ -51,7 +45,7 @@ bool searchSumUnsorted(ItStart && first, ItEnd && last, T sum) {
 	//  --> already searching for duplicated elements which form the sum
 	//  -->  parallelization: unordered_map is shared object with mutexes on only specific keys. (Possible?)
 	//  --> Further improvements: Own hasfunktion for buckets --> possible
-	// 			solution for parallelization as well 
+	// 			solution for parallelization as well
 	std::unordered_map<T, std::size_t> map;
 	for (auto it = first; it != last; ++it) {
 	    auto itm = map.find(*it);
@@ -93,8 +87,13 @@ bool searchSumUnsorted(ItStart && first, ItEnd && last, T sum) {
 }
 
 template<class Range, class T>
-decltype(auto)HasPairWithSumUnsorted(Range && range, T sum) {
-	return searchSumUnsorted(std::begin(range), std::end(range), sum);
+decltype(auto) HasPairWithSum(Range && range, T sum) {
+	if(std::is_sorted(std::begin(range), std::end(range))) {
+		return searchSumSorted(std::begin(range), std::end(range), sum);
+	}
+	else {
+		return searchSumUnsorted(std::begin(range), std::end(range), sum);
+	}
 }
 
 int main() {
@@ -105,8 +104,8 @@ int main() {
 	std::cout << "Sorted 1: " << GoogleHasPairWithSum(v_sorted_1, 8) << '\n';
 	std::cout << "Sorted 2: " << GoogleHasPairWithSum(v_sorted_2, 8) << '\n';
 	std::cout << "Own Solution: \n";
-	std::cout << "Sorted 1: " << HasPairWithSumSorted(v_sorted_1, 8) << '\n';
-	std::cout << "Sorted 2: " << HasPairWithSumSorted(v_sorted_2, 8) << '\n';
+	std::cout << "Sorted 1: " << HasPairWithSum(v_sorted_1, 8) << '\n';
+	std::cout << "Sorted 2: " << HasPairWithSum(v_sorted_2, 8) << '\n';
 
 
 	std::vector<int> v_unsorted_1 {2, 9, 1, 4};
@@ -126,13 +125,13 @@ int main() {
 	std::vector<int> vec(10000000);
 	std::generate(std::begin(vec), std::end(vec), gen);
 
-	std::cout << "Unsorted 1: " << HasPairWithSumUnsorted(v_unsorted_1, 8)
+	std::cout << "Unsorted 1: " << HasPairWithSum(v_unsorted_1, 8)
 	          << '\n';
-	std::cout << "Unsorted 2: " << HasPairWithSumUnsorted(v_unsorted_2, 8)
+	std::cout << "Unsorted 2: " << HasPairWithSum(v_unsorted_2, 8)
 	          << '\n';
-	std::cout << "Unsorted 3: " << HasPairWithSumUnsorted(v_unsorted_3, 8)
+	std::cout << "Unsorted 3: " << HasPairWithSum(v_unsorted_3, 8)
 	          << '\n';
-	std::cout << "Unsorted 4: " << HasPairWithSumUnsorted(vec, 8)
+	std::cout << "Unsorted 4: " << HasPairWithSum(vec, 8)
 	          << "\n\nRandom vector: ";
 
 	// std::for_each(std::begin(vec),

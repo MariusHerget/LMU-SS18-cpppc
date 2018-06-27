@@ -1,0 +1,534 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifpackageloaded{hyperref}{}{%
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+}
+\@ifpackageloaded{color}{
+    \PassOptionsToPackage{usenames,dvipsnames}{color}
+}{%
+    \usepackage[usenames,dvipsnames]{color}
+}
+\makeatother
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={},
+            pdftitle={Midterm Assignment},
+            colorlinks=true,
+            citecolor=blue,
+            urlcolor=blue,
+            linkcolor=magenta,
+            pdfborder={0 0 0}
+            }
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+\newcommand{\ImportTok}[1]{{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+\newcommand{\BuiltInTok}[1]{{#1}}
+\newcommand{\ExtensionTok}[1]{{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+\newcommand{\RegionMarkerTok}[1]{{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+\newcommand{\NormalTok}[1]{{#1}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+
+\title{Midterm Assignment}
+\date{}
+
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+% HERGET
+\input{/home/herget/LMU/templates/ans-env.tex}
+
+\lstset{basicstyle={\ttfamily},literate={↓}{$\downarrow{}$}{1}}
+ % END HERGET
+\begin{document}
+\maketitle
+
+\section{1. Types, Classes, Objects and their
+State}\label{types-classes-objects-and-their-state}
+
+\subsection{1.1 Object Definition}\label{object-definition}
+
+Assuming you are confronted with a class that supports the following use
+case:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{DateParser date_parser;}
+\NormalTok{date_parser.set_date(today);}
+
+\KeywordTok{auto} \NormalTok{day = date_parser.day_of_week();}
+\end{Highlighting}
+\end{Shaded}
+
+What is your objection to this? How would you change the interface of
+class \texttt{DateParser}?
+
+\problemAnswer{
+    \begin{enumerate}
+        \item Konstruktoren, in denen man direkt die Zeit setzen kann
+        \item \texttt{set\_date} stellt nicht klar welche Formate es annimmt (entweder alle oder genauer spezifizieren)
+        \item \texttt{day\_of\_week()} mit Uebergabeparametern
+    \end{enumerate}
+}
+
+\subsection{1.2 Standard Object
+Semantics}\label{standard-object-semantics}
+
+Given the following implementation of class \texttt{SemanticSurprise}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{class} \NormalTok{SemanticSurprise \{}
+\KeywordTok{public}\NormalTok{:}
+
+  \NormalTok{SemanticSurprise(}\DataTypeTok{int} \NormalTok{value)}
+  \NormalTok{: _value(value) \{ \}}
+
+  \NormalTok{SemanticSurprise(}\DataTypeTok{const} \NormalTok{SemanticSurprise & other)}
+  \NormalTok{: _value(other._value) \{ \}}
+
+  \DataTypeTok{bool} \KeywordTok{operator}\NormalTok{==(}\DataTypeTok{const} \NormalTok{SemanticSurprise & other) }\DataTypeTok{const} \NormalTok{\{}
+    \KeywordTok{return} \NormalTok{_value == other._value;}
+  \NormalTok{\}}
+
+  \DataTypeTok{int} \NormalTok{value() \{}
+    \KeywordTok{return} \NormalTok{_value;}
+  \NormalTok{\}}
+
+\KeywordTok{private}\NormalTok{:}
+  \DataTypeTok{int} \NormalTok{_value;}
+\NormalTok{\};}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Are there compiler errors? If so: why?
+  \problemAnswer{
+    Nope: \url{https://godbolt.org/g/ihDPeV}
+  }
+\item
+  Name the method/operation on \texttt{SemanticSurprise} in every line
+  marked with \texttt{Op?}, including those that lead to compiler
+  errors.
+\item
+  Which values are returned in the lines marked with \texttt{value?}
+  (given the line does not lead to a compiler error). Explain why these
+  values are returned.
+\item
+  How can this implementation be simplified? What is the requirement for
+  this simplification?
+  \problemAnswer{
+    Copy Constructor can be defaulted.
+  }
+
+\end{itemize}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{SemanticSurprise s1;          }\CommentTok{// Default Constructor}
+\NormalTok{s1.value();                   }\CommentTok{// Compiler Error (No matching constructor)}
+
+\NormalTok{SemanticSurprise s2(}\DecValTok{4}\NormalTok{);       }\CommentTok{// Parameterized Constructor}
+\NormalTok{s2.value();                   }\CommentTok{// 4}
+
+\NormalTok{SemanticSurprise s3 = s2;     }\CommentTok{// Copy Constructor}
+\NormalTok{s3.value();                   }\CommentTok{// 4}
+
+\NormalTok{SemanticSurprise s4(s3);      }\CommentTok{// Copy Constructor}
+\NormalTok{s4 == s3;                     }\CommentTok{// True}
+\NormalTok{s2 != s3;                     }\CommentTok{// Compiler Error (invailid operands to binary expression)}
+\end{Highlighting}
+\end{Shaded}
+
+Given the implementation of \texttt{SemanticSurprise} above, the
+following use case leads to a compiler error:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DataTypeTok{void} \NormalTok{print_surprise(}\DataTypeTok{const} \NormalTok{SemanticSurprise & s) \{}
+  \NormalTok{std::cout << }\StringTok{"SemanticSurprise.value: "} \NormalTok{<< s.value() << std::endl;}
+\NormalTok{\}}
+
+\NormalTok{print_surprise(SemanticSurprise(}\DecValTok{10}\NormalTok{));}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Explain the compiler error and how the implementation of
+  \texttt{SemanticSurprise} has to be corrected.
+  \problemAnswer{
+    The given SemanticSurprise is marked as const but the function \texttt{value()} is not marked as const. Therefore it could potentially modify the object. Possible solutions:
+        \begin{itemize}
+            \item Mark \texttt{value()} as \texttt{const}
+            \item Implement a second function: \texttt{int value() const { return \_value; }}
+        \end{itemize}
+  }
+\end{itemize}
+
+\subsection{1.3 Resource Ownership}\label{resource-ownership}
+
+Consider the following use case:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{// ...}
+\KeywordTok{if} \NormalTok{(condition) \{}
+        \NormalTok{LogFileReader log_reader(}\StringTok{"performance.log"}\NormalTok{);}
+        \KeywordTok{if} \NormalTok{(log_reader.lines().size() > }\DecValTok{1024}\NormalTok{) \{ }\KeywordTok{return}\NormalTok{; \}}
+\NormalTok{\}}
+\CommentTok{// ...}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Judging from its usage illustrated above: which rule must be satisfied
+  in the implementation of class \texttt{LogFileReader} (or one of its
+  members)?
+\item
+  Name a popular technique in resource management that depends on this
+  rule, and briefly explain its principle.
+\end{itemize}
+
+\section{2. Iterators}\label{iterators}
+
+\section{2.1 Algorithm Basics}\label{algorithm-basics}
+
+The following algorithm dereferences and returns a given iterator's
+successor unless the successor's referenced value matches some
+condition. The algorithm is semantically correct but does not compile
+for iterators of some containers.
+
+\begin{itemize}
+\tightlist
+\item
+  Which containers? Briefly explain why the algorithm does not work for
+  these and how it has to be changed.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{template} \NormalTok{<}\KeywordTok{typename} \NormalTok{Iterator, }\KeywordTok{typename} \NormalTok{Value = }\KeywordTok{typename} \NormalTok{Iterator::value_type>}
+\NormalTok{Value next_value_or_default(Iterator it, Iterator end, Value }\KeywordTok{default}\NormalTok{) \{}
+  \KeywordTok{if} \NormalTok{(it == end || it}\DecValTok{+1} \NormalTok{== end) \{ }\KeywordTok{return} \KeywordTok{default}\NormalTok{; \}}
+  \KeywordTok{return} \NormalTok{it[}\DecValTok{1}\NormalTok{];}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\section{2.2 Container Wrapper}\label{container-wrapper}
+
+The STL's \texttt{std::vector} guarantess that its elements are stored
+in a contiguous memory region and is therefore compatible to C-style
+arrays. The member function \texttt{.data()} returns a pointer to the
+vector's underlying raw memory.
+
+For many hardware-tuning techniques, data is accessed in chunks.
+Assuming a \texttt{std::vector\textless{}uint32\_t\textgreater{}} and 64
+bytes per cache line, for example, vector elements could be loaded in
+chunks of 64/(32/8) = 16 elements.
+
+\begin{itemize}
+\item
+  Write a container wrapper
+
+\begin{verbatim}
+cpppc::chunks<B, T, Container>
+\end{verbatim}
+
+  that provides a sequential container interface on elements in
+  \texttt{Container} in chunks of maximum size \texttt{B} bytes.
+\end{itemize}
+
+The template signature is derived from \texttt{std::stack}, a similar
+wrapper type defined in the STL:
+
+\url{http://en.cppreference.com/w/cpp/container/stack}
+
+You only need to implement a minimal interface like constructors and
+\texttt{begin()}, \texttt{end()}, however.
+
+Example use case:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std::vector<}\DataTypeTok{uint16_t}\NormalTok{> v_us;}
+
+\CommentTok{//                                    ,-- wrapped container}
+\CommentTok{//                                    |}
+\NormalTok{cpppc::chunks<}\DecValTok{128}\NormalTok{, uint16t_t, std::vector<}\DataTypeTok{uint16_t}\NormalTok{>> v_chunks(v_us);}
+\CommentTok{//             |      |}
+\CommentTok{//             |      '-- element type}
+\CommentTok{//             |}
+\CommentTok{//             '-- maximum size of a}
+\CommentTok{//                 single chunk in bytes}
+
+\CommentTok{// Iterate chunks:}
+\KeywordTok{auto} \NormalTok{first_chunk = v_chunks.begin();}
+\KeywordTok{auto} \NormalTok{chunk_size  = std::distance(v_chunks.begin(), v_chunks.end());}
+                   \CommentTok{// --> 128/(16/8) = 64}
+
+\CommentTok{// Iterators on elements in a chunk:}
+\DataTypeTok{uint16_t} \NormalTok{first_chunk_elem = *first_chunk.begin();}
+\DataTypeTok{uint16_t} \NormalTok{third_chunk_elem = first_chunk[}\DecValTok{2}\NormalTok{];}
+
+\CommentTok{// Pointer to data in second chunk:}
+\DataTypeTok{uint16_t} \NormalTok{chunk_1_data = v_chunks[}\DecValTok{1}\NormalTok{].data();}
+\CommentTok{// Pointer to data in third chunk (= end pointer of data in second chunk):}
+\DataTypeTok{uint16_t} \NormalTok{chunk_2_data = v_chunks[}\DecValTok{2}\NormalTok{].data();}
+\end{Highlighting}
+\end{Shaded}
+
+Note that you need two iterator types:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{cpppc::chunks\textless{}...\textgreater{}::iterator} for
+  iterating chunks; it references
+  \texttt{cpppc::chunks\textless{}...\textgreater{}::value\_type} (=
+  type of single chunks)
+\item
+  and another iterator type to access chunk elements.
+\end{itemize}
+
+It might be best if you use existing STL containers like
+\texttt{std::vector\textless{}T\textgreater{}} or
+\texttt{std::array\textless{}T,\ ChunkSize\textgreater{}} as chunk type:
+these would already provide the sequence container interface to chunk
+elements you need.
+
+\textbf{Note}
+
+The \texttt{cpppc::chunks} container adapter can (and should) be
+implemented as a \emph{view}, that is: without copying elements of the
+underlying vector.
+
+\subsection{2.X Bonus}\label{x-bonus}
+
+If you want to implement more sophisticated type size calculations like
+alignment requirements, refer to the C++ type support utilities:
+
+\url{http://en.cppreference.com/w/cpp/types}
+
+Or make yourself familiar with the boost Align library (brace for
+impact):
+
+\url{http://www.boost.org/doc/libs/1_63_0/doc/html/align.html}
+
+\section{3. Algorithms, Function Templates, Type
+Deduction}\label{algorithms-function-templates-type-deduction}
+
+\begin{itemize}
+\item
+  Implement a function interface \texttt{void\ log10(X)} that accepts a
+  numeric value of type \texttt{X} and:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    prints the base 10 logarithm of the value if it is an integer
+  \item
+    prints the base 10 logarithm of the value's square root if it is a
+    floating point value
+  \end{itemize}
+\item
+  Implement a function interface
+  \texttt{void\ print\_walk(T\ begin,\ T\ end)} that accepts a range of
+  iterators of type \texttt{T} and prints all values in the range. In
+  this, the iteration order depends on the iterator type:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    for random-access iterators, the order should be (pseudo) random but
+    every element in the range must only be printed once
+  \item
+    for input iterators, elements are printed in order from
+    \texttt{begin} to \texttt{end-1}
+  \item
+    for bidirectional iterators, elements are printed in reverse order
+    from \texttt{end-1} to \texttt{begin}
+  \end{itemize}
+\end{itemize}
+
+\section{4. Thread-Safety}\label{thread-safety}
+
+\subsection{4.1 Parallelism and STL
+Containers}\label{parallelism-and-stl-containers}
+
+Given the following operations on an instance of \texttt{std::vector},
+consider operations in the same table row to be executed by multiple
+threads in parallel:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{// Shared vector instance accessed by thread A and thread B:}
+\NormalTok{std::vector<}\DataTypeTok{int}\NormalTok{> v;}
+
+\CommentTok{// thread A:                    | thread B:}
+\CommentTok{// =============================|==============================}
+   \NormalTok{std::vector<}\DataTypeTok{int}\NormalTok{> a;          | std::vector<}\DataTypeTok{int}\NormalTok{> b;}
+\CommentTok{// -----------------------------+------------------------------}
+   \DataTypeTok{int} \NormalTok{xa = v[}\DecValTok{3}\NormalTok{];               | }\DataTypeTok{int} \NormalTok{xb = v[}\DecValTok{4}\NormalTok{];}
+\CommentTok{// -----------------------------+------------------------------}
+   \NormalTok{v[}\DecValTok{3}\NormalTok{] = }\DecValTok{123}\NormalTok{;                  | v[}\DecValTok{4}\NormalTok{] = }\DecValTok{345}\NormalTok{;}
+\CommentTok{// -----------------------------+------------------------------}
+   \NormalTok{v[}\DecValTok{3}\NormalTok{] = }\DecValTok{123}\NormalTok{;                  | }\DataTypeTok{int} \NormalTok{xb = v[}\DecValTok{3}\NormalTok{];}
+\CommentTok{// -----------------------------+------------------------------}
+   \NormalTok{v.push_back(}\DecValTok{24}\NormalTok{);             | v.size();}
+\CommentTok{// -----------------------------+------------------------------}
+   \NormalTok{v.back();                    | v.push_back(}\DecValTok{54}\NormalTok{);}
+\CommentTok{// -----------------------------+------------------------------}
+   \NormalTok{v.begin();                   | v.push_back(}\DecValTok{34}\NormalTok{);}
+\CommentTok{// -----------------------------+------------------------------}
+   \NormalTok{v.back();                    | v.pop_back();}
+\CommentTok{// -----------------------------+------------------------------}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  For every pair of operation on the same table row, give a brief
+  explanation on the guarantees with respect to thread-safety according
+  to the C++ standard.
+\end{itemize}
+
+\subsection{4.2 Producer-Consumer
+Problem}\label{producer-consumer-problem}
+
+Simply put, one thread is producing goods and another thread is
+consuming goods. We want the consumer thread to wait \textbf{using a
+condition variable}, and we want \texttt{goods.push(i)} to be mutually
+exclusive to \texttt{goods.pop()}.
+
+We are letting c++ and c-- be surrogates for this mutual exclusion,
+since we can easily check if we correctly end up with 0 in the end.
+
+Run the code as it is, and you will see that the net value is way off:
+
+\begin{quote}
+\texttt{Note:}
+
+I know there is an easier solution, however the condition variable
+approach is more efficient in many cases and not as commonly known as it
+should be.
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\OtherTok{#include <iostream>}
+\OtherTok{#include <thread>}
+\OtherTok{#include <condition_variable>}
+\OtherTok{#include <mutex>}
+\OtherTok{#include <chrono>}
+\OtherTok{#include <queue>}
+\KeywordTok{using} \KeywordTok{namespace} \NormalTok{std;}
+
+\DataTypeTok{int} \NormalTok{main() \{}
+    \DataTypeTok{int} \NormalTok{c = }\DecValTok{0}\NormalTok{;}
+    \DataTypeTok{bool} \NormalTok{done = }\KeywordTok{false}\NormalTok{;}
+    \NormalTok{queue<}\DataTypeTok{int}\NormalTok{> goods;}
+
+    \NormalTok{thread producer([&]() \{}
+        \KeywordTok{for} \NormalTok{(}\DataTypeTok{int} \NormalTok{i = }\DecValTok{0}\NormalTok{; i < }\DecValTok{500}\NormalTok{; ++i) \{}
+            \NormalTok{goods.push(i);}
+            \NormalTok{c++;}
+        \NormalTok{\}}
+
+        \NormalTok{done = }\KeywordTok{true}\NormalTok{;}
+    \NormalTok{\});}
+
+    \NormalTok{thread consumer([&]() \{}
+        \KeywordTok{while} \NormalTok{(!done) \{}
+            \KeywordTok{while} \NormalTok{(!goods.empty()) \{}
+                \NormalTok{goods.pop();}
+                \NormalTok{c--;}
+            \NormalTok{\}}
+        \NormalTok{\}}
+    \NormalTok{\});}
+
+    \NormalTok{producer.join();}
+    \NormalTok{consumer.join();}
+    \NormalTok{cout << }\StringTok{"Net: "} \NormalTok{<< c << endl;}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\end{document}

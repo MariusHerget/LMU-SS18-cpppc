@@ -50,7 +50,7 @@ public:
 
   // Before each iteration
   virtual void onExperimentStart(int64_t) override {
-    this->array.resize(this->arraySize);
+    this->array.resize(this->arraySize);1
     for (int64_t i = 0; i < this->arraySize; i++) {
       this->array[i] = rand();
     }

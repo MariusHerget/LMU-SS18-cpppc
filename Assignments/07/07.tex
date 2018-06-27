@@ -332,8 +332,8 @@ Two of those are \emph{Modifying Sequence Operation} and
   ranges?
     \problemAnswer{
         \begin{itemize}
-            \item remove/remove\_if
-            \item remove\_copy/remove\_copy\_if
+            \item remove/remove\_if --> Not in real only a partition which moves elements behind the iterator
+            \item remove\_copy/remove\_copy\_if --> Not in real only a partition which moves elements behind the iterator
             \item replace/replace\_if
             \item replace\_copy/replace\_copy\_if
             \item generate\_n
@@ -353,7 +353,7 @@ Two of those are \emph{Modifying Sequence Operation} and
             \item[\texttt{std::list}] invalidates on deleted list elements
             \item[\texttt{std::deque}] invalidates all iterators
             \item[\texttt{std::vector}] no invalidation of iterators
-            \item[\texttt{std::map}] 
+            \item[\texttt{std::map}]
         \end{description}
     }
 \end{itemize}
