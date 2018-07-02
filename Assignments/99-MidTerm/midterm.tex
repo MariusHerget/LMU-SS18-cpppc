@@ -108,8 +108,6 @@
 \fi
 % HERGET
 \input{/home/herget/LMU/templates/ans-env.tex}
-
-\lstset{basicstyle={\ttfamily},literate={↓}{$\downarrow{}$}{1}}
  % END HERGET
 \begin{document}
 \maketitle
@@ -135,6 +133,7 @@ What is your objection to this? How would you change the interface of
 class \texttt{DateParser}?
 
 \problemAnswer{
+Possible improvements:
     \begin{enumerate}
         \item Konstruktoren, in denen man direkt die Zeit setzen kann
         \item \texttt{set\_date} stellt nicht klar welche Formate es annimmt (entweder alle oder genauer spezifizieren)
@@ -200,14 +199,14 @@ Given the following implementation of class \texttt{SemanticSurprise}:
 \NormalTok{SemanticSurprise s1;          }\CommentTok{// Default Constructor}
 \NormalTok{s1.value();                   }\CommentTok{// Compiler Error (No matching constructor)}
 
-\NormalTok{SemanticSurprise s2(}\DecValTok{4}\NormalTok{);       }\CommentTok{// Parameterized Constructor}
-\NormalTok{s2.value();                   }\CommentTok{// 4}
+\NormalTok{SemanticSurprise s2(}\DecValTok{4}\NormalTok{);       }\CommentTok{// Parameterized (Assignment) Constructor}
+\NormalTok{s2.value();                   }\CommentTok{// 4 --> constructor defined}
 
-\NormalTok{SemanticSurprise s3 = s2;     }\CommentTok{// Copy Constructor}
-\NormalTok{s3.value();                   }\CommentTok{// 4}
+\NormalTok{SemanticSurprise s3 = s2;     }\CommentTok{// Copy-assignment Constructor}
+\NormalTok{s3.value();                   }\CommentTok{// 4 --> assigned in s2}
 
 \NormalTok{SemanticSurprise s4(s3);      }\CommentTok{// Copy Constructor}
-\NormalTok{s4 == s3;                     }\CommentTok{// True}
+\NormalTok{s4 == s3;                     }\CommentTok{// True --> Copy constructor fullfill the \texttt{operator==}}
 \NormalTok{s2 != s3;                     }\CommentTok{// Compiler Error (invailid operands to binary expression)}
 \end{Highlighting}
 \end{Shaded}
@@ -234,7 +233,7 @@ following use case leads to a compiler error:
     The given SemanticSurprise is marked as const but the function \texttt{value()} is not marked as const. Therefore it could potentially modify the object. Possible solutions:
         \begin{itemize}
             \item Mark \texttt{value()} as \texttt{const}
-            \item Implement a second function: \texttt{int value() const { return \_value; }}
+            \item Implement a second function: \\\texttt{int value() const \{ return \_value; \}}
         \end{itemize}
   }
 \end{itemize}
@@ -260,9 +259,18 @@ Consider the following use case:
   Judging from its usage illustrated above: which rule must be satisfied
   in the implementation of class \texttt{LogFileReader} (or one of its
   members)?
+  \problemAnswer{
+  ???
+
+        Potential memory leak when the if condition throws an error (or is it? Since lifetime of the variable is ended auf the mother if condition).\\[2em]
+??? Which rule!\\[2em]
+
+        In addition \texttt{log\_reader.lines()} should be constant since other applications can still write log information to the file (this saves us a mutex / sharable resource).
+  }
 \item
   Name a popular technique in resource management that depends on this
   rule, and briefly explain its principle.
+  \problemAnswer{???}
 \end{itemize}
 
 \section{2. Iterators}\label{iterators}
@@ -290,6 +298,15 @@ for iterators of some containers.
 \NormalTok{\}}
 \end{Highlighting}
 \end{Shaded}
+
+
+\problemAnswer{
+    First it does not compile. \texttt{default} is in some compilers a reserved keyword. Renamed it to \texttt{dfault}.\\
+    
+    The problem of this implementation is the increment of the iterator \texttt{it+1}. This is only suitable for \texttt{RandomAccessIterators}. The correct implementation should be \texttt{it++} to be also suitable for \texttt{ForwardIterator}, \texttt{BidirectionalIterator} and \texttt{InputIterator}.\\ Therefore all container using the \texttt{RandomAccessIterator Concept} should work with this implementation.
+
+    \url{https://godbolt.org/g/8hrmHb}
+}
 
 \section{2.2 Container Wrapper}\label{container-wrapper}
 
