@@ -454,6 +454,8 @@ Given the following operations on an instance of \texttt{std::vector},
 consider operations in the same table row to be executed by multiple
 threads in parallel:
 
+\problemAnswer{All mentioning of rules (e.g. \texttt{Rule 1.}) are based on \url{https://en.cppreference.com/w/cpp/container#Thread_safety}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{// Shared vector instance accessed by thread A and thread B:}
@@ -462,20 +464,31 @@ threads in parallel:
 \CommentTok{// thread A:                    | thread B:}
 \CommentTok{// =============================|==============================}
    \NormalTok{std::vector<}\DataTypeTok{int}\NormalTok{> a;          | std::vector<}\DataTypeTok{int}\NormalTok{> b;}
+\CommentTok{// Safe: no shared resources (Rule 1.)}
 \CommentTok{// -----------------------------+------------------------------}
    \DataTypeTok{int} \NormalTok{xa = v[}\DecValTok{3}\NormalTok{];               | }\DataTypeTok{int} \NormalTok{xb = v[}\DecValTok{4}\NormalTok{];}
+\CommentTok{// Safe: Rad-only -> Rule 2.}
 \CommentTok{// -----------------------------+------------------------------}
    \NormalTok{v[}\DecValTok{3}\NormalTok{] = }\DecValTok{123}\NormalTok{;                  | v[}\DecValTok{4}\NormalTok{] = }\DecValTok{345}\NormalTok{;}
+\CommentTok{// Safe: Rule 3.}
 \CommentTok{// -----------------------------+------------------------------}
    \NormalTok{v[}\DecValTok{3}\NormalTok{] = }\DecValTok{123}\NormalTok{;                  | }\DataTypeTok{int} \NormalTok{xb = v[}\DecValTok{3}\NormalTok{];}
+\CommentTok{// Not safe: Modyfing and reading the same element in the same}
+\CommentTok{// container can result in ambigious behaviour}
 \CommentTok{// -----------------------------+------------------------------}
    \NormalTok{v.push_back(}\DecValTok{24}\NormalTok{);             | v.size();}
+\CommentTok{// Not safe: The underlying container is modified in A and its}
+\CommentTok{// properties (which change) is read in B -> ambigious behaviour}
 \CommentTok{// -----------------------------+------------------------------}
    \NormalTok{v.back();                    | v.push_back(}\DecValTok{54}\NormalTok{);}
+\CommentTok{// Not safe: Rule 2. is violated. }
 \CommentTok{// -----------------------------+------------------------------}
    \NormalTok{v.begin();                   | v.push_back(}\DecValTok{34}\NormalTok{);}
+\CommentTok{// Not 100\% safe: push_back can invailidate the iteratos}
 \CommentTok{// -----------------------------+------------------------------}
    \NormalTok{v.back();                    | v.pop_back();}
+\CommentTok{// Not safe: The underlying container is modified and read at the}
+\CommentTok{// same time \& pop_back can invailidate the iterators}
 \CommentTok{// -----------------------------+------------------------------}
 \end{Highlighting}
 \end{Shaded}
