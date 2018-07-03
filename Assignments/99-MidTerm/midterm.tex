@@ -302,7 +302,7 @@ for iterators of some containers.
 
 \problemAnswer{
     First it does not compile. \texttt{default} is in some compilers a reserved keyword. Renamed it to \texttt{dfault}.\\
-    
+
     The problem of this implementation is the increment of the iterator \texttt{it+1}. This is only suitable for \texttt{RandomAccessIterators}. The correct implementation should be \texttt{it++} to be also suitable for \texttt{ForwardIterator}, \texttt{BidirectionalIterator} and \texttt{InputIterator}.\\ Therefore all container using the \texttt{RandomAccessIterator Concept} should work with this implementation.
 
     \url{https://godbolt.org/g/8hrmHb}
@@ -435,6 +435,7 @@ Deduction}\label{algorithms-function-templates-type-deduction}
   \item
     for random-access iterators, the order should be (pseudo) random but
     every element in the range must only be printed once
+    \problemAnswer{Is the implementation random enough?}
   \item
     for input iterators, elements are printed in order from
     \texttt{begin} to \texttt{end-1}
