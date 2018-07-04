@@ -78,10 +78,12 @@ public:
   ~chunks() = default;
 
   Iterator begin() { return Iterator(_con, 0); }
-  Iterator end() { return Iterator(_con, size() / _size); }
+  Iterator end() {
+    return Iterator(_con, size() / (chunksizebytes / sizeof(ValueT)));
+  }
 
   const value_type operator[](std::size_t index) const {
-    return value_type(_con, index * _size);
+    return value_type(_con, index * (chunksizebytes / sizeof(ValueT)));
   }
 
   std::size_t size() { return _con.size(); }

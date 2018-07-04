@@ -5,7 +5,7 @@
 using namespace std;
 int main() {
   std::vector<std::uint16_t> v_us(256);
-  std::iota(std::begin(v_us), std::end(v_us), 0);
+  std::iota(std::begin(v_us), std::end(v_us), 1);
 
   //                                    ,-- wrapped container
   //                                    |
@@ -21,7 +21,11 @@ int main() {
   std::cout << *first_chunk << '\n';
   auto num_chunks = std::distance(v_chunks.begin(), v_chunks.end());
   // --> 128/(16/8) = 64
-  std::cout << "Chunk Size: " << num_chunks << "\n";
+  std::cout << "Number of chunks (" << v_us.size() << " elements * "
+            << sizeof(std::uint16_t)
+            << " Bytes = 512 Bytes / 128 "
+               "Bytes chunks size = 4): "
+            << num_chunks << "\n";
 
   // Iterators on elements in a chunk:
   uint16_t first_chunk_elem = *first_chunk.begin();
