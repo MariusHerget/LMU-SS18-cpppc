@@ -191,6 +191,7 @@ Given the following implementation of class \texttt{SemanticSurprise}:
   this simplification?
   \problemAnswer{
     Copy Constructor can be defaulted.
+    ???
   }
 
 \end{itemize}
@@ -260,11 +261,7 @@ Consider the following use case:
   in the implementation of class \texttt{LogFileReader} (or one of its
   members)?
   \problemAnswer{
-  ???
-
-        Potential memory leak when the if condition throws an error (or is it? Since lifetime of the variable is ended auf the mother if condition).\\[2em]
-??? Which rule!\\[2em]
-
+        Potential memory leak when the if condition throws an error.\\ The concept needs to fullfill the Resource Allocation is Initialization (RAII) rule.\\[1em]
         In addition \texttt{log\_reader.lines()} should be constant since other applications can still write log information to the file (this saves us a mutex / sharable resource).
   }
 \item
