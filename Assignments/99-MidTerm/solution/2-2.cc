@@ -18,7 +18,6 @@ int main() {
 
   // Iterate chunks:
   auto first_chunk = v_chunks.begin();
-  std::cout << *first_chunk << '\n';
   auto num_chunks = std::distance(v_chunks.begin(), v_chunks.end());
   // --> 128/(16/8) = 64
   std::cout << "Number of chunks (" << v_us.size() << " elements * "
@@ -29,7 +28,9 @@ int main() {
 
   // Iterators on elements in a chunk:
   uint16_t first_chunk_elem = *first_chunk.begin();
+  // uint16_t first_chunk_elem2 = *((*first_chunk).begin());
   std::cout << first_chunk_elem << '\n';
+  // std::cout << first_chunk_elem2 << '\n';
   uint16_t third_chunk_elem = first_chunk[2];
   std::cout << third_chunk_elem << '\n';
   //

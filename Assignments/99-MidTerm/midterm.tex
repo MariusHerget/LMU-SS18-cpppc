@@ -191,7 +191,6 @@ Given the following implementation of class \texttt{SemanticSurprise}:
   this simplification?
   \problemAnswer{
     Copy Constructor can be defaulted.
-    ???
   }
 
 \end{itemize}
@@ -261,13 +260,15 @@ Consider the following use case:
   in the implementation of class \texttt{LogFileReader} (or one of its
   members)?
   \problemAnswer{
-        Potential memory leak when the if condition throws an error.\\ The concept needs to fullfill the Resource Allocation is Initialization (RAII) rule.\\[1em]
-        In addition \texttt{log\_reader.lines()} should be constant since other applications can still write log information to the file (this saves us a mutex / sharable resource).
+        Potential memory leak when the if condition throws an error.\\ The concept needs to fullfill the Rule of Three/Five.
+        % In addition \texttt{log\_reader.lines()} should be constant since other applications can still write log information to the file (this saves us a mutex / sharable resource).
   }
 \item
   Name a popular technique in resource management that depends on this
   rule, and briefly explain its principle.
-  \problemAnswer{???}
+  \problemAnswer{
+    Resource Allocation is Initialization (RAII) is a common technique which depends on this rule. In this technique the ressources are allocated during the initialization (via constructor) and hold until the object is destroyed (via destructor.)
+  }
 \end{itemize}
 
 \section{2. Iterators}\label{iterators}
@@ -451,7 +452,7 @@ Given the following operations on an instance of \texttt{std::vector},
 consider operations in the same table row to be executed by multiple
 threads in parallel:
 
-\problemAnswer{All mentioning of rules (e.g. \texttt{Rule 1.}) are based on \url{https://en.cppreference.com/w/cpp/container#Thread_safety}}
+\note{All mentioning of rules (e.g. \texttt{Rule 1.}) are based on \url{https://en.cppreference.com/w/cpp/container#Thread_safety}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
